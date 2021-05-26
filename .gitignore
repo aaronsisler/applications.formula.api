@@ -1,2 +1,13 @@
-dist/
+# dependencies
 node_modules/
+.vscode/
+
+# Build files
+dist/
+
+# Testing
+coverage/
+
+# local error files
+npm-debug.log*
+sh.exe.stackdump
