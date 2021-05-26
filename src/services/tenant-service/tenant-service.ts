@@ -1,0 +1,3 @@
+class TenantService {}
+
+export { TenantService };
