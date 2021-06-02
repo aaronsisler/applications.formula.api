@@ -8,6 +8,8 @@ dist/
 # Testing
 coverage/
 
-# local error files
+# local files
 npm-debug.log*
 sh.exe.stackdump
+.DS_Store
+**/.DS_Store
