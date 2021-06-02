@@ -1,3 +1,0 @@
-class TenantService {}
-
-export { TenantService };

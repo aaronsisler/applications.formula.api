@@ -29,3 +29,5 @@ The full list can be found [here](https://github.com/aaronsisler/applications.fo
 - Given a tenantId, get all applications
 - Given an applicationid, get all application fields
 - Given an applicationid, get all applicant submissions
+
+- Test if I store TenantName with a UserId record AND with a TenantId record, how do I update the TenantName in both datasets
