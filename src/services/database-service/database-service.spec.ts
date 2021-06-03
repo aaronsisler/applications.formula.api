@@ -3,8 +3,11 @@ import { DatabaseService } from "./index";
 
 jest.mock("aws-sdk", () => ({
   config: {
-    update: jest.fn(),
+    update: jest.fn()
   },
+  DynamoDB: {
+    DocumentClient: jest.fn().mockImplementation(() => ({}))
+  }
 }));
 
 describe("Services/DatabaseService", () => {
@@ -26,6 +29,10 @@ describe("Services/DatabaseService", () => {
   describe("when instantiated", () => {
     it("should update the configuration correctly", () => {
       expect(aws.config.update).toHaveBeenCalledWith({ region: "us-east-1" });
+    });
+
+    it("should create a new instance of the correct type", () => {
+      expect(aws.DynamoDB.DocumentClient).toHaveBeenCalled();
     });
   });
 });
