@@ -1,3 +1,3 @@
-import { TOKEN_VALIDATION_URL } from "./config";
+import { TABLE_NAME, TOKEN_VALIDATION_URL } from "./config";
 
-export { TOKEN_VALIDATION_URL };
+export { TABLE_NAME, TOKEN_VALIDATION_URL };
