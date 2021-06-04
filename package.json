@@ -10,7 +10,9 @@
     "lint": "eslint \"./**/*.js\"",
     "start": "node dist/index.js",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "domain:beta": "sls create_domain --config=./pipeline/serverless.beta.yml",
+    "deploy:beta": "npm run build && sls deploy --config=./pipeline/serverless.beta.yml"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -18,7 +20,8 @@
   "dependencies": {
     "aws-sdk": "^2.916.0",
     "axios": "^0.21.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "serverless-domain-manager": "^5.1.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.76",
@@ -34,6 +37,7 @@
     "jest": "^27.0.1",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0",
+    "serverless": "^2.44.0",
     "ts-jest": "^27.0.1",
     "ts-node": "^10.0.0",
     "typescript": "^4.2.4"

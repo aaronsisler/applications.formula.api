@@ -1,0 +1,445 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "HealthLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/formula-api-beta-health"
+      }
+    },
+    "UserDashpostLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/formula-api-beta-user-post"
+      }
+    },
+    "HealthLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/formula-api/beta/1622770711767-2021-06-04T01:38:31.767Z/formula-api.zip"
+        },
+        "Handler": "dist/handlers/health-handler/index.handler",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "formula-api-beta-health",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Description": "Gateway health check. Responds with current time and a short message.",
+        "Role": "arn:aws:iam::654918520080:role/APIG-LAMBDA-DDB"
+      },
+      "DependsOn": [
+        "HealthLogGroup"
+      ]
+    },
+    "UserDashpostLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/formula-api/beta/1622770711767-2021-06-04T01:38:31.767Z/formula-api.zip"
+        },
+        "Handler": "dist/handlers/user-post-handler/index.handler",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "formula-api-beta-user-post",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Description": "Retrieve user with OAuth token. Create user with given user information.",
+        "Role": "arn:aws:iam::654918520080:role/APIG-LAMBDA-DDB"
+      },
+      "DependsOn": [
+        "UserDashpostLogGroup"
+      ]
+    },
+    "HealthLambdaVersionnv6Kx7xZOQwYy7eOfNSxBgfvl8xLumHBXS14d5FQW4": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "HealthLambdaFunction"
+        },
+        "CodeSha256": "NHAYijbM/SGhzZIqfQ/rduTBMgHhWiI83w+P4IhpHjc=",
+        "Description": "Gateway health check. Responds with current time and a short message."
+      }
+    },
+    "UserDashpostLambdaVersionZryWB1rW7EUSRXs1pVGAGx9VESb5h8VgCOD0ZOs6zmQ": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "UserDashpostLambdaFunction"
+        },
+        "CodeSha256": "NHAYijbM/SGhzZIqfQ/rduTBMgHhWiI83w+P4IhpHjc=",
+        "Description": "Retrieve user with OAuth token. Create user with given user information."
+      }
+    },
+    "ApiGatewayRestApi": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "beta-formula-api",
+        "EndpointConfiguration": {
+          "Types": [
+            "EDGE"
+          ]
+        },
+        "Policy": ""
+      }
+    },
+    "ApiGatewayResourceHealth": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "health",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceUser": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "user",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodHealthGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceHealth"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "HealthLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayMethodUserPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUser"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "UserDashpostLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayDeployment1622770697550": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "StageName": "beta"
+      },
+      "DependsOn": [
+        "ApiGatewayMethodHealthGet",
+        "ApiGatewayMethodUserPost"
+      ]
+    },
+    "ApiGatewayUsagePlan": {
+      "Type": "AWS::ApiGateway::UsagePlan",
+      "DependsOn": "ApiGatewayDeployment1622770697550",
+      "Properties": {
+        "ApiStages": [
+          {
+            "ApiId": {
+              "Ref": "ApiGatewayRestApi"
+            },
+            "Stage": "beta"
+          }
+        ],
+        "Description": "Usage plan for formula-api beta stage",
+        "UsagePlanName": "formula-api-beta",
+        "Quota": {
+          "Limit": 500,
+          "Offset": 0,
+          "Period": "MONTH"
+        },
+        "Throttle": {
+          "BurstLimit": 20,
+          "RateLimit": 10
+        }
+      }
+    },
+    "HealthLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "HealthLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "UserDashpostLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "UserDashpostLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
+      "Export": {
+        "Name": "sls-formula-api-beta-ServerlessDeploymentBucketName"
+      }
+    },
+    "HealthLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "HealthLambdaVersionnv6Kx7xZOQwYy7eOfNSxBgfvl8xLumHBXS14d5FQW4"
+      },
+      "Export": {
+        "Name": "sls-formula-api-beta-HealthLambdaFunctionQualifiedArn"
+      }
+    },
+    "UserDashpostLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "UserDashpostLambdaVersionZryWB1rW7EUSRXs1pVGAGx9VESb5h8VgCOD0ZOs6zmQ"
+      },
+      "Export": {
+        "Name": "sls-formula-api-beta-UserDashpostLambdaFunctionQualifiedArn"
+      }
+    },
+    "ServiceEndpoint": {
+      "Description": "URL of the service endpoint",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "ApiGatewayRestApi"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/beta"
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "sls-formula-api-beta-ServiceEndpoint"
+      }
+    }
+  }
+}
