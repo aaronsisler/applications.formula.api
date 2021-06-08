@@ -27,10 +27,17 @@ functions:
           method: get
   user-post:
     handler: dist/handlers/user-post-handler/index.handler
-    description: Retrieve user with OAuth token. Create user with given user information.
+    description: Create user.
     events:
       - http:
           path: /user
+          method: post
+  user-tenant-post:
+    handler: dist/handlers/user-tenant-post-handler/index.handler
+    description: Add tenant to user.
+    events:
+      - http:
+          path: /user/tenant
           method: post
 
 plugins:
