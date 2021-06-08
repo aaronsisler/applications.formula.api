@@ -22,7 +22,16 @@ class UserService {
 
       await this.databaseService.create(item);
     } catch (error) {
-      errorLogger("Service:User", error);
+      errorLogger("Service:User::create", error);
+      throw new Error("Record not created");
+    }
+  }
+
+  async addTenant(): Promise<void> {
+    try {
+      return Promise.resolve();
+    } catch (error) {
+      errorLogger("Service:User::addTenant", error);
       throw new Error("Record not created");
     }
   }
