@@ -90,7 +90,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/formula-api/beta/1622770711767-2021-06-04T01:38:31.767Z/formula-api.zip"
+          "S3Key": "serverless/formula-api/beta/1622773102283-2021-06-04T02:18:22.283Z/formula-api.zip"
         },
         "Handler": "dist/handlers/health-handler/index.handler",
         "Runtime": "nodejs12.x",
@@ -111,7 +111,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/formula-api/beta/1622770711767-2021-06-04T01:38:31.767Z/formula-api.zip"
+          "S3Key": "serverless/formula-api/beta/1622773102283-2021-06-04T02:18:22.283Z/formula-api.zip"
         },
         "Handler": "dist/handlers/user-post-handler/index.handler",
         "Runtime": "nodejs12.x",
@@ -125,25 +125,25 @@
         "UserDashpostLogGroup"
       ]
     },
-    "HealthLambdaVersionnv6Kx7xZOQwYy7eOfNSxBgfvl8xLumHBXS14d5FQW4": {
+    "HealthLambdaVersiondF47n2R2zNKcUs9MLdW7vShwAeRRMtPrpACNZQSBSOQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HealthLambdaFunction"
         },
-        "CodeSha256": "NHAYijbM/SGhzZIqfQ/rduTBMgHhWiI83w+P4IhpHjc=",
+        "CodeSha256": "V1VZRl0G0YGddyXMoFUb+34qxJwY1wWSbBioUDTkJV0=",
         "Description": "Gateway health check. Responds with current time and a short message."
       }
     },
-    "UserDashpostLambdaVersionZryWB1rW7EUSRXs1pVGAGx9VESb5h8VgCOD0ZOs6zmQ": {
+    "UserDashpostLambdaVersion59ffgUuW3s9SitzYi8HrxQwsg0PanRqKohBzhXiiM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "UserDashpostLambdaFunction"
         },
-        "CodeSha256": "NHAYijbM/SGhzZIqfQ/rduTBMgHhWiI83w+P4IhpHjc=",
+        "CodeSha256": "V1VZRl0G0YGddyXMoFUb+34qxJwY1wWSbBioUDTkJV0=",
         "Description": "Retrieve user with OAuth token. Create user with given user information."
       }
     },
@@ -275,7 +275,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1622770697550": {
+    "ApiGatewayDeployment1622773087616": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -290,7 +290,7 @@
     },
     "ApiGatewayUsagePlan": {
       "Type": "AWS::ApiGateway::UsagePlan",
-      "DependsOn": "ApiGatewayDeployment1622770697550",
+      "DependsOn": "ApiGatewayDeployment1622773087616",
       "Properties": {
         "ApiStages": [
           {
@@ -400,7 +400,7 @@
     "HealthLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HealthLambdaVersionnv6Kx7xZOQwYy7eOfNSxBgfvl8xLumHBXS14d5FQW4"
+        "Ref": "HealthLambdaVersiondF47n2R2zNKcUs9MLdW7vShwAeRRMtPrpACNZQSBSOQ"
       },
       "Export": {
         "Name": "sls-formula-api-beta-HealthLambdaFunctionQualifiedArn"
@@ -409,7 +409,7 @@
     "UserDashpostLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "UserDashpostLambdaVersionZryWB1rW7EUSRXs1pVGAGx9VESb5h8VgCOD0ZOs6zmQ"
+        "Ref": "UserDashpostLambdaVersion59ffgUuW3s9SitzYi8HrxQwsg0PanRqKohBzhXiiM"
       },
       "Export": {
         "Name": "sls-formula-api-beta-UserDashpostLambdaFunctionQualifiedArn"

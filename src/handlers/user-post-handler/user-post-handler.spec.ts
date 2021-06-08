@@ -27,59 +27,53 @@ describe("Handlers/User:Post", () => {
   });
 
   describe("when a user is to be created", () => {
-    describe("and when authentication is successful", () => {
-      beforeEach(() => {
-        event = {};
+    beforeEach(() => {
+      event = {
+        body: '{"firstName":"mock-first-name","lastName":"mock-last-name"}'
+      };
+    });
+
+    describe("and when user is created", () => {
+      beforeEach(async () => {
+        await handler(event, undefined, callback);
       });
 
-      describe("and when user is created", () => {
-        beforeEach(async () => {
-          await handler(event, undefined, callback);
-        });
-
-        it("should attempt to create user correctly", async () => {
-          expect(mockCreate).toHaveBeenCalled();
-        });
-
-        it("should return the correct response", () => {
-          expect(responseBodyBuilder).toHaveBeenCalledWith(201, "Success");
-        });
-
-        it("should invoke the callback correctly", () => {
-          expect(callback).toHaveBeenCalledWith(
-            null,
-            "mock-body-built-response"
-          );
-        });
+      it("should attempt to create user correctly", async () => {
+        expect(mockCreate).toHaveBeenCalled();
       });
 
-      describe("and when user is NOT created", () => {
-        beforeEach(async () => {
-          mockCreate = jest.fn().mockRejectedValue("mock-error");
-          await handler(event, undefined, callback);
-        });
+      it("should return the correct response", () => {
+        expect(responseBodyBuilder).toHaveBeenCalledWith(201, "Success");
+      });
 
-        it("should attempt to create user correctly", async () => {
-          expect(mockCreate).toHaveBeenCalled();
-        });
+      it("should invoke the callback correctly", () => {
+        expect(callback).toHaveBeenCalledWith(null, "mock-body-built-response");
+      });
+    });
 
-        it("should log error messages correctly", () => {
-          expect(errorLogger).toHaveBeenCalledWith(
-            "Handler/User:Post",
-            "mock-error"
-          );
-        });
+    describe("and when user is NOT created", () => {
+      beforeEach(async () => {
+        mockCreate = jest.fn().mockRejectedValue("mock-error");
+        await handler(event, undefined, callback);
+      });
 
-        it("should return the correct response", () => {
-          expect(responseBodyBuilder).toHaveBeenCalledWith(500, "Failure");
-        });
+      it("should attempt to create user correctly", async () => {
+        expect(mockCreate).toHaveBeenCalled();
+      });
 
-        it("should invoke the callback correctly", () => {
-          expect(callback).toHaveBeenCalledWith(
-            null,
-            "mock-body-built-response"
-          );
-        });
+      it("should log error messages correctly", () => {
+        expect(errorLogger).toHaveBeenCalledWith(
+          "Handler/User:Post",
+          "mock-error"
+        );
+      });
+
+      it("should return the correct response", () => {
+        expect(responseBodyBuilder).toHaveBeenCalledWith(500, "Failure");
+      });
+
+      it("should invoke the callback correctly", () => {
+        expect(callback).toHaveBeenCalledWith(null, "mock-body-built-response");
       });
     });
   });
