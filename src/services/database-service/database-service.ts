@@ -26,7 +26,20 @@ class DatabaseService {
     }
   }
 
-  async get(partitionKey: string, sortKey: string): Promise<QueryOutput> {
+  async getItem(mainKey: string): Promise<QueryOutput> {
+    try {
+      var params = {
+        Key: { PartitionKey: mainKey, SortKey: mainKey },
+        TableName: TABLE_NAME
+      };
+      return await this.documentClient.get(params).promise();
+    } catch (error) {
+      errorLogger("Service:Database", error);
+      throw new Error("Record not created");
+    }
+  }
+
+  async getItems(partitionKey: string, sortKey: string): Promise<QueryOutput> {
     try {
       var params = {
         KeyConditionExpression:

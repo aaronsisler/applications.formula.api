@@ -30,10 +30,7 @@ class UserService {
 
   async get(userId: string): Promise<any> {
     try {
-      const result = await this.databaseService.get(
-        `User#${userId}`,
-        `User#${userId}`
-      );
+      const result = await this.databaseService.getItem(`User#${userId}`);
       return Promise.resolve(result);
     } catch (error) {
       errorLogger("Service:User::getTenants", error);
@@ -58,7 +55,10 @@ class UserService {
 
   async getTenants(userId: string): Promise<any> {
     try {
-      const result = await this.databaseService.get(`User#${userId}`, "Tenant");
+      const result = await this.databaseService.getItems(
+        `User#${userId}`,
+        "Tenant"
+      );
       return Promise.resolve(result);
     } catch (error) {
       errorLogger("Service:User::getTenants", error);
