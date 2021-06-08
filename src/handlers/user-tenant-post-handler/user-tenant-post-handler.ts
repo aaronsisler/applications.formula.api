@@ -7,7 +7,7 @@ import {
 } from "aws-lambda";
 
 import { HandlerResponse } from "../../models/handler-response";
-import { User } from "../../models/user";
+import { UserTenant } from "../../models/user-tenant";
 import { UserService } from "../../services/user-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
@@ -21,9 +21,9 @@ const userTenantPost: APIGatewayProxyHandler = async (
     const userService = new UserService();
     const { body: rawBody } = event;
     const body = JSON.parse(rawBody);
-    const user: User = new User({ ...body });
+    const userTenant: UserTenant = new UserTenant({ ...body });
 
-    await userService.addTenant();
+    await userService.addTenant(userTenant);
 
     const response: HandlerResponse = responseBodyBuilder(201, "Success");
 

@@ -2,6 +2,7 @@ import { DatabaseService } from "../database-service";
 import { errorLogger } from "../../utils/error-logger";
 import { uuidGenerator } from "../../utils/uuid-generator";
 import { User } from "../../models/user";
+import { UserTenant } from "../../models/user-tenant";
 
 class UserService {
   private databaseService: DatabaseService;
@@ -15,21 +16,27 @@ class UserService {
       const uuid = uuidGenerator();
 
       const item = {
-        ...user,
         PartitionKey: `User#${uuid}`,
-        SortKey: `User#${uuid}`
+        SortKey: `User#${uuid}`,
+        ...user
       };
 
-      await this.databaseService.create(item);
+      return await this.databaseService.create(item);
     } catch (error) {
       errorLogger("Service:User::create", error);
       throw new Error("Record not created");
     }
   }
 
-  async addTenant(): Promise<void> {
+  async addTenant(userTenant: UserTenant): Promise<void> {
     try {
-      return Promise.resolve();
+      const item = {
+        PartitionKey: `User#${userTenant.userId}`,
+        SortKey: `Tenant#${userTenant.tenantId}`,
+        tenantName: userTenant.tenantName
+      };
+
+      return await this.databaseService.create(item);
     } catch (error) {
       errorLogger("Service:User::addTenant", error);
       throw new Error("Record not created");
