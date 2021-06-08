@@ -11,7 +11,7 @@ import { UserService } from "../../services/user-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-const userTenantGet: APIGatewayProxyHandler = async (
+const userGet: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   _context: Context,
   callback: Callback<APIGatewayProxyResult>
@@ -21,13 +21,13 @@ const userTenantGet: APIGatewayProxyHandler = async (
     const { pathParameters } = event;
     const { userId } = pathParameters;
 
-    const result = await userService.getTenants(userId);
+    const result = await userService.get(userId);
 
     const response: HandlerResponse = responseBodyBuilder(201, result);
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/User:Tenant:Get", error);
+    errorLogger("Handler/User:Get", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);
@@ -36,4 +36,4 @@ const userTenantGet: APIGatewayProxyHandler = async (
   }
 };
 
-export { userTenantGet };
+export { userGet };

@@ -32,6 +32,17 @@ functions:
       - http:
           path: /user
           method: post
+  user-get:
+    handler: dist/handlers/user-get-handler/index.handler
+    description: Get a user.
+    events:
+      - http:
+          path: /user/{userId}
+          method: get
+          request:
+            parameters:
+              paths:
+                userId: true
   user-tenant-post:
     handler: dist/handlers/user-tenant-post-handler/index.handler
     description: Add tenant to user.
@@ -39,6 +50,17 @@ functions:
       - http:
           path: /user/tenant
           method: post
+  user-tenant-get:
+    handler: dist/handlers/user-tenant-get-handler/index.handler
+    description: Get tenants for a user.
+    events:
+      - http:
+          path: /user/tenant/{userId}
+          method: get
+          request:
+            parameters:
+              paths:
+                userId: true
 
 plugins:
   - serverless-domain-manager

@@ -28,6 +28,19 @@ class UserService {
     }
   }
 
+  async get(userId: string): Promise<any> {
+    try {
+      const result = await this.databaseService.get(
+        `User#${userId}`,
+        `User#${userId}`
+      );
+      return Promise.resolve(result);
+    } catch (error) {
+      errorLogger("Service:User::getTenants", error);
+      throw new Error("Records not retrieved");
+    }
+  }
+
   async addTenant(userTenant: UserTenant): Promise<void> {
     try {
       const item = {
@@ -43,9 +56,10 @@ class UserService {
     }
   }
 
-  async getTenants(userId: string): Promise<void> {
+  async getTenants(userId: string): Promise<any> {
     try {
-      return Promise.resolve();
+      const result = await this.databaseService.get(`User#${userId}`, "Tenant");
+      return Promise.resolve(result);
     } catch (error) {
       errorLogger("Service:User::getTenants", error);
       throw new Error("Records not retrieved");
