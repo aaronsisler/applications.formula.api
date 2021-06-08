@@ -42,6 +42,15 @@ class UserService {
       throw new Error("Record not created");
     }
   }
+
+  async getTenants(userId: string): Promise<void> {
+    try {
+      return Promise.resolve();
+    } catch (error) {
+      errorLogger("Service:User::getTenants", error);
+      throw new Error("Records not retrieved");
+    }
+  }
 }
 
 export { UserService };
