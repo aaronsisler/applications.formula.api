@@ -7,6 +7,7 @@ import {
 } from "aws-lambda";
 
 import { HandlerResponse } from "../../models/handler-response";
+import { User } from "../../models/user";
 import { UserService } from "../../services/user-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
@@ -21,7 +22,7 @@ const userGet: APIGatewayProxyHandler = async (
     const { pathParameters } = event;
     const { userId } = pathParameters;
 
-    const result = await userService.get(userId);
+    const result: User = await userService.get(userId);
 
     const response: HandlerResponse = responseBodyBuilder(201, result);
 

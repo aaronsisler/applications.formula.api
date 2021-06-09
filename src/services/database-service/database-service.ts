@@ -1,5 +1,5 @@
 import aws, { DynamoDB } from "aws-sdk";
-import { QueryOutput } from "aws-sdk/clients/dynamodb";
+import { GetItemOutput, QueryOutput } from "aws-sdk/clients/dynamodb";
 
 import { TABLE_NAME } from "../../config";
 import { errorLogger } from "../../utils/error-logger";
@@ -26,7 +26,7 @@ class DatabaseService {
     }
   }
 
-  async getItem(mainKey: string): Promise<QueryOutput> {
+  async getItem(mainKey: string): Promise<GetItemOutput> {
     try {
       var params = {
         Key: { PartitionKey: mainKey, SortKey: mainKey },
