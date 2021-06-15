@@ -1,7 +1,9 @@
 import { DatabaseService } from "../database-service";
-import { errorLogger } from "../../utils/error-logger";
 import { User } from "../../models/user";
 import { UserTenant } from "../../models/user-tenant";
+import { databaseKeyParser } from "../../utils/database-key-parser";
+import { errorLogger } from "../../utils/error-logger";
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 class UserService {
   private databaseService: DatabaseService;
@@ -28,7 +30,7 @@ class UserService {
   async get(userId: string): Promise<User> {
     try {
       const { Item } = await this.databaseService.getItem(`User#${userId}`);
-      const user = new User({ userId: String(Item.PartitionKey), ...Item });
+      const user = new User({ ...Item });
       return Promise.resolve(user);
     } catch (error) {
       errorLogger("Service:User::getTenants", error);
@@ -59,10 +61,10 @@ class UserService {
       );
       return Promise.resolve(
         Items.map(
-          (item) =>
+          (item: DocumentClient.AttributeMap) =>
             new UserTenant({
-              userId: String(item.PartitionKey),
-              tenantId: String(item.SortKey),
+              userId: databaseKeyParser(item.PartitionKey),
+              tenantId: databaseKeyParser(item.SortKey),
               ...item
             })
         )

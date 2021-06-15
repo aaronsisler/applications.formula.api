@@ -1,5 +1,5 @@
 import aws, { DynamoDB } from "aws-sdk";
-import { GetItemOutput, QueryOutput } from "aws-sdk/clients/dynamodb";
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 import { TABLE_NAME } from "../../config";
 import { errorLogger } from "../../utils/error-logger";
@@ -26,7 +26,7 @@ class DatabaseService {
     }
   }
 
-  async getItem(mainKey: string): Promise<GetItemOutput> {
+  async getItem(mainKey: string): Promise<DocumentClient.GetItemOutput> {
     try {
       var params = {
         Key: { PartitionKey: mainKey, SortKey: mainKey },
@@ -39,7 +39,10 @@ class DatabaseService {
     }
   }
 
-  async getItems(partitionKey: string, sortKey: string): Promise<QueryOutput> {
+  async getItems(
+    partitionKey: string,
+    sortKey: string
+  ): Promise<DocumentClient.QueryOutput> {
     try {
       var params = {
         KeyConditionExpression:

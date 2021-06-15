@@ -1,12 +1,10 @@
-import { AttributeValue } from "aws-sdk/clients/dynamodb";
-
 import { databaseKeyParser } from "./index";
 
 describe("utils:databaseKeyParser", () => {
-  let databaseKey: AttributeValue;
+  let databaseKey: string;
 
   beforeEach(() => {
-    databaseKey = { S: "mock-prefix#mock-suffix" };
+    databaseKey = "mock-prefix#mock-suffix";
   });
 
   afterEach(() => {});
