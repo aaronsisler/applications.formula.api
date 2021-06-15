@@ -1,6 +1,5 @@
 import { DatabaseService } from "../database-service";
 import { errorLogger } from "../../utils/error-logger";
-import { uuidGenerator } from "../../utils/uuid-generator";
 import { User } from "../../models/user";
 import { UserTenant } from "../../models/user-tenant";
 
@@ -13,11 +12,9 @@ class UserService {
 
   async create(user: User): Promise<void> {
     try {
-      const uuid = uuidGenerator();
-
       const item = {
-        PartitionKey: `User#${uuid}`,
-        SortKey: `User#${uuid}`,
+        PartitionKey: `User#${user.userId}`,
+        SortKey: `User#${user.userId}`,
         ...user
       };
 
