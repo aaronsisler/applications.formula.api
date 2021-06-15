@@ -18,8 +18,7 @@ class DatabaseService {
         TableName: TABLE_NAME,
         Item: item
       };
-      const result = await this.documentClient.put(params).promise();
-      console.log(result);
+      await this.documentClient.put(params).promise();
     } catch (error) {
       errorLogger("Service:Database", error);
       throw new Error("Record not created");
