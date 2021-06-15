@@ -1,26 +1,23 @@
-import { uuidGenerator } from "./index";
+import { AttributeValue } from "aws-sdk/clients/dynamodb";
 
-describe("utils:uuidGenerator", () => {
-  beforeEach(() => {});
+import { databaseKeyParser } from "./index";
+
+describe("utils:databaseKeyParser", () => {
+  let databaseKey: AttributeValue;
+
+  beforeEach(() => {
+    databaseKey = { S: "mock-prefix#mock-suffix" };
+  });
 
   afterEach(() => {});
 
   it("should be a function", () => {
-    expect(typeof uuidGenerator).toEqual("function");
+    expect(typeof databaseKeyParser).toEqual("function");
   });
 
-  it("should create a uuid correctly", () => {
-    const uuid = uuidGenerator();
-    const uuidParts = uuid.split("-");
+  it("should parse the database key correctly", () => {
+    const result = databaseKeyParser(databaseKey);
 
-    expect(uuid).toHaveLength(36);
-
-    expect(uuidParts).toHaveLength(5);
-
-    expect(uuidParts[0]).toHaveLength(8);
-    expect(uuidParts[1]).toHaveLength(4);
-    expect(uuidParts[2]).toHaveLength(4);
-    expect(uuidParts[3]).toHaveLength(4);
-    expect(uuidParts[4]).toHaveLength(12);
+    expect(result).toEqual("mock-suffix");
   });
 });
