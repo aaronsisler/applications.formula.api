@@ -11,7 +11,6 @@
     "Authorization",
     "X-Api-Key",
     "X-Amz-Security-Token",
-    "X-Amz-User-Agent",
-    "Api-Version"
+    "X-Amz-User-Agent"
   ]
 }
