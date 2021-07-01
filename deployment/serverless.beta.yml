@@ -8,6 +8,7 @@ provider:
   iam:
     role: arn:aws:iam::654918520080:role/APIG-LAMBDA-DDB
   apiGateway:
+    shouldStartNameWithService: true
     usagePlan:
       quota:
         limit: 500
