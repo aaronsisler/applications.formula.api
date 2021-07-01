@@ -11,8 +11,8 @@
     "start": "node dist/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "domain:beta": "sls create_domain --config=./pipeline/serverless.beta.yml",
-    "deploy:beta": "npm run build && sls deploy --config=./pipeline/serverless.beta.yml"
+    "domain:beta": "sls create_domain --config=./deployment/serverless.beta.yml",
+    "deploy:beta": "npm run build && sls deploy --config=./deployment/serverless.beta.yml"
   },
   "engines": {
     "node": ">=12.0.0"
