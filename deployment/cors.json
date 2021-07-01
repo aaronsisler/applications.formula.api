@@ -6,6 +6,7 @@
     "https://eandbsolutions.com"
   ],
   "headers": [
+    "Access-Control-Allow-Origin",
     "Content-Type",
     "X-Amz-Date",
     "Authorization",
