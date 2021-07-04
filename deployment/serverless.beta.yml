@@ -81,14 +81,14 @@ functions:
       - http:
           path: /user/tenant/{userId}
           method: GET
-          cors: true
           request:
             parameters:
               paths:
                 userId: true
-            # origins: ${file(./deployment/cors.json):allowedOrigins}
-            # headers: ${file(./deployment/cors.json):headers}
-            # allowCredentials: false
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
 
 plugins:
   - serverless-domain-manager
