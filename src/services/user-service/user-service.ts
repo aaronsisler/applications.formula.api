@@ -5,7 +5,7 @@ import { databaseKeyParser } from "../../utils/database-key-parser";
 import { errorLogger } from "../../utils/error-logger";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
-class UserService {
+export class UserService {
   private databaseService: DatabaseService;
 
   constructor() {
@@ -75,5 +75,3 @@ class UserService {
     }
   }
 }
-
-export { UserService };

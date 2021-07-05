@@ -4,7 +4,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { TABLE_NAME } from "../../config";
 import { errorLogger } from "../../utils/error-logger";
 
-class DatabaseService {
+export class DatabaseService {
   private documentClient: DynamoDB.DocumentClient;
 
   constructor() {
@@ -59,5 +59,3 @@ class DatabaseService {
     }
   }
 }
-
-export { DatabaseService };

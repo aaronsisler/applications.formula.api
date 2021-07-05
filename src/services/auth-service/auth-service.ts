@@ -1,3 +1,1 @@
-class AuthService {}
-
-export { AuthService };
+export class AuthService {}
