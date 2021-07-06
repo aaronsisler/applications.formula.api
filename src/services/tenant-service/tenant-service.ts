@@ -43,7 +43,7 @@ export class TenantService {
       const item = {
         PartitionKey: `Tenant#${tenantApplication.tenantId}`,
         SortKey: `Application#${tenantApplication.applicationId}`,
-        applicationName: tenantApplication.applicantName
+        applicantName: tenantApplication.applicantName
       };
 
       return await this.databaseService.create(item);
