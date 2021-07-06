@@ -22,7 +22,7 @@ export class TenantService {
 
       return await this.databaseService.create(item);
     } catch (error) {
-      errorLogger("Service:User::create", error);
+      errorLogger("Service:Tenant::create", error);
       throw new Error("Record not created");
     }
   }

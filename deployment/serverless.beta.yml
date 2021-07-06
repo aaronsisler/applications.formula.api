@@ -37,17 +37,6 @@ functions:
       - http:
           path: /health
           method: GET
-  # user-post:
-  #   handler: dist/handlers/user-post-handler/index.handler
-  #   description: Create user
-  #   events:
-  #     - http:
-  #         path: /user
-  #         method: POST
-  #         cors:
-  #           origins: ${file(./deployment/cors.json):allowedOrigins}
-  #           headers: ${file(./deployment/cors.json):headers}
-  #           allowCredentials: false
   user-get:
     handler: dist/handlers/user-get-handler/index.handler
     description: Get a user
@@ -63,18 +52,17 @@ functions:
             enabled: true
             origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
-  # user-tenant-post:
-  #   handler: dist/handlers/user-tenant-post-handler/index.handler
-  #   description: Add tenant to user
-  #   events:
-  #     - http:
-  #         path: /user/tenant
-  #         method: POST
-  #         cors:
-  #           enabled: true
-  #           origins: ${file(./deployment/cors.json):allowedOrigins}
-  #           headers: ${file(./deployment/cors.json):headers}
-  #           allowCredentials: false
+  user-post:
+    handler: dist/handlers/user-post-handler/index.handler
+    description: Create user
+    events:
+      - http:
+          path: /user
+          method: POST
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
   user-tenant-get:
     handler: dist/handlers/user-tenant-get-handler/index.handler
     description: Get tenants for a user
@@ -86,6 +74,17 @@ functions:
             parameters:
               paths:
                 userId: true
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
+  user-tenant-post:
+    handler: dist/handlers/user-tenant-post-handler/index.handler
+    description: Add tenant to user
+    events:
+      - http:
+          path: /user/tenant
+          method: POST
           cors:
             enabled: true
             origins: ${file(./deployment/cors.json):allowedOrigins}
@@ -105,6 +104,17 @@ functions:
             enabled: true
             origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+  tenant-post:
+    handler: dist/handlers/tenant-post-handler/index.handler
+    description: Create tenant
+    events:
+      - http:
+          path: /tenant
+          method: POST
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
   tenant-application-get:
     handler: dist/handlers/tenant-application-get-handler/index.handler
     description: Get applications for a tenant
@@ -116,6 +126,17 @@ functions:
             parameters:
               paths:
                 tenantId: true
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
+  tenant-application-post:
+    handler: dist/handlers/tenant-application-post-handler/index.handler
+    description: Add application to a tenant
+    events:
+      - http:
+          path: /tenant/application
+          method: POST
           cors:
             enabled: true
             origins: ${file(./deployment/cors.json):allowedOrigins}
