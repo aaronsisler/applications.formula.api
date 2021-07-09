@@ -141,6 +141,32 @@ functions:
             enabled: true
             origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+  application-get:
+    handler: dist/handlers/application-get-handler/index.handler
+    description: Get an application
+    events:
+      - http:
+          path: /application/{applicationId}
+          method: GET
+          request:
+            parameters:
+              paths:
+                applicationId: true
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
+  application-post:
+    handler: dist/handlers/application-post-handler/index.handler
+    description: Create application
+    events:
+      - http:
+          path: /application
+          method: POST
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
 
 plugins:
   - serverless-domain-manager
