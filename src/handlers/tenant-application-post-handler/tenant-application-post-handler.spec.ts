@@ -28,7 +28,7 @@ describe("Handlers/Tenant:Application:Post", () => {
   describe("when a application is added to tenant", () => {
     beforeEach(() => {
       event = {
-        body: '{"tenantId":"mock-tenant-id","applicationId":"mock-application-id","applicantName":"Applicant Name"}'
+        body: '{"tenantId":"mock-tenant-id","applicationId":"mock-application-id","applicationName":"mock-application-name"}'
       };
     });
 
