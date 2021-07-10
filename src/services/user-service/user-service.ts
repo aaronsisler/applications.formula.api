@@ -1,9 +1,10 @@
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
+
 import { DatabaseService } from "../database-service";
 import { User } from "../../models/user";
 import { UserTenant } from "../../models/user-tenant";
 import { databaseKeyParser } from "../../utils/database-key-parser";
 import { errorLogger } from "../../utils/error-logger";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 export class UserService {
   private databaseService: DatabaseService;
@@ -14,10 +15,12 @@ export class UserService {
 
   async create(user: User): Promise<void> {
     try {
+      const tenants: any = null;
       const item = {
         PartitionKey: `User#${user.userId}`,
         SortKey: `User#${user.userId}`,
-        ...user
+        ...user,
+        tenants
       };
 
       return await this.databaseService.create(item);
@@ -29,11 +32,12 @@ export class UserService {
 
   async get(userId: string): Promise<User> {
     try {
-      const { Item } = await this.databaseService.getItem(`User#${userId}`);
-      const user = new User({ ...Item });
+      const rawUser = await this.databaseService.getItem(`User#${userId}`);
+      const user = new User({ ...rawUser });
+
       return Promise.resolve(user);
     } catch (error) {
-      errorLogger("Service:User::getTenants", error);
+      errorLogger("Service:User::get", error);
       throw new Error("Records not retrieved");
     }
   }
@@ -55,20 +59,21 @@ export class UserService {
 
   async getTenants(userId: string): Promise<UserTenant[]> {
     try {
-      const { Items } = await this.databaseService.getItems(
+      const rawTenants = await this.databaseService.getItems(
         `User#${userId}`,
         "Tenant"
       );
-      return Promise.resolve(
-        Items.map(
-          (item: DocumentClient.AttributeMap) =>
-            new UserTenant({
-              userId: databaseKeyParser(item.PartitionKey),
-              tenantId: databaseKeyParser(item.SortKey),
-              ...item
-            })
-        )
+
+      const tenants = rawTenants.map(
+        (item: DocumentClient.AttributeMap) =>
+          new UserTenant({
+            userId: databaseKeyParser(item.PartitionKey),
+            tenantId: databaseKeyParser(item.SortKey),
+            ...item
+          })
       );
+
+      return Promise.resolve(tenants);
     } catch (error) {
       errorLogger("Service:User::getTenants", error);
       throw new Error("Records not retrieved");

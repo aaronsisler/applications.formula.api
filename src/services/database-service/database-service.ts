@@ -25,13 +25,15 @@ export class DatabaseService {
     }
   }
 
-  async getItem(mainKey: string): Promise<DocumentClient.GetItemOutput> {
+  async getItem(mainKey: string): Promise<DocumentClient.AttributeMap> {
     try {
       var params = {
         Key: { PartitionKey: mainKey, SortKey: mainKey },
         TableName: TABLE_NAME
       };
-      return await this.documentClient.get(params).promise();
+      const { Item } = await this.documentClient.get(params).promise();
+
+      return Item;
     } catch (error) {
       errorLogger("Service:Database", error);
       throw new Error("Record not created");
@@ -41,7 +43,7 @@ export class DatabaseService {
   async getItems(
     partitionKey: string,
     sortKey: string
-  ): Promise<DocumentClient.QueryOutput> {
+  ): Promise<DocumentClient.ItemList> {
     try {
       var params = {
         KeyConditionExpression:
@@ -52,7 +54,9 @@ export class DatabaseService {
         },
         TableName: TABLE_NAME
       };
-      return await this.documentClient.query(params).promise();
+      const { Items } = await this.documentClient.query(params).promise();
+
+      return Items;
     } catch (error) {
       errorLogger("Service:Database", error);
       throw new Error("Record not created");

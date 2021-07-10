@@ -1,9 +1,10 @@
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
+
 import { DatabaseService } from "../database-service";
 import { Tenant } from "../../models/tenant";
 import { TenantApplication } from "../../models/tenant-application";
 import { databaseKeyParser } from "../../utils/database-key-parser";
 import { errorLogger } from "../../utils/error-logger";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 export class TenantService {
   private databaseService: DatabaseService;
@@ -14,10 +15,12 @@ export class TenantService {
 
   async create(tenant: Tenant): Promise<void> {
     try {
+      const applications: any = null;
       const item = {
         PartitionKey: `Tenant#${tenant.tenantId}`,
         SortKey: `Tenant#${tenant.tenantId}`,
-        ...tenant
+        ...tenant,
+        applications
       };
 
       return await this.databaseService.create(item);
@@ -29,8 +32,19 @@ export class TenantService {
 
   async get(tenantId: string): Promise<Tenant> {
     try {
-      const { Item } = await this.databaseService.getItem(`Tenant#${tenantId}`);
-      const tenant = new Tenant({ ...Item });
+      const rawTenent = await this.databaseService.getItem(
+        `Tenant#${tenantId}`
+      );
+
+      const applications: TenantApplication[] = await this.getApplications(
+        tenantId
+      );
+
+      const tenant = new Tenant({
+        ...rawTenent,
+        applications
+      });
+
       return Promise.resolve(tenant);
     } catch (error) {
       errorLogger("Service:Tenant::get", error);
@@ -55,20 +69,21 @@ export class TenantService {
 
   async getApplications(tenantId: string): Promise<TenantApplication[]> {
     try {
-      const { Items } = await this.databaseService.getItems(
+      const rawTenantApplications = await this.databaseService.getItems(
         `Tenant#${tenantId}`,
         "Application"
       );
-      return Promise.resolve(
-        Items.map(
-          (item: DocumentClient.AttributeMap) =>
-            new TenantApplication({
-              tenantId: databaseKeyParser(item.PartitionKey),
-              applicationId: databaseKeyParser(item.SortKey),
-              ...item
-            })
-        )
+
+      const tenantApplications = rawTenantApplications.map(
+        (item: DocumentClient.AttributeMap) =>
+          new TenantApplication({
+            tenantId: databaseKeyParser(item.PartitionKey),
+            applicationId: databaseKeyParser(item.SortKey),
+            ...item
+          })
       );
+
+      return Promise.resolve(tenantApplications);
     } catch (error) {
       errorLogger("Service:Tenant::getApplications", error);
       throw new Error("Records not retrieved");

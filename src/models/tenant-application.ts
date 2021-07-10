@@ -4,8 +4,8 @@ export class TenantApplication {
   applicationName: string;
 
   constructor(options: {
-    tenantId?: string;
-    applicationId?: string;
+    tenantId: string;
+    applicationId: string;
     applicationName?: string;
   }) {
     this.tenantId = options.tenantId;

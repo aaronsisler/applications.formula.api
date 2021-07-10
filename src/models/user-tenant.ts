@@ -1,15 +1,15 @@
 export class UserTenant {
-  tenantId: string;
   userId: string;
+  tenantId: string;
   tenantName: string;
 
   constructor(options: {
-    tenantId?: string;
-    userId?: string;
+    userId: string;
+    tenantId: string;
     tenantName?: string;
   }) {
-    this.tenantId = options.tenantId;
     this.userId = options.userId;
+    this.tenantId = options.tenantId;
     this.tenantName = options.tenantName;
   }
 }
