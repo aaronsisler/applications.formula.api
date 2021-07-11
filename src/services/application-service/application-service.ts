@@ -68,10 +68,10 @@ export class ApplicationService {
     const mappedApplicationFields: object[] = applicationFields.map(
       (applicationField) => ({
         PartitionKey: `Application#${applicationField.applicationId}`,
-        SortKey: `Application#${applicationField.applicationFieldId}`,
+        SortKey: `ApplicationField#${applicationField.applicationFieldId}`,
         ...applicationField,
-        applicationId: null,
-        applicationFieldId: null
+        applicationId: undefined,
+        applicationFieldId: undefined
       })
     );
     return mappedApplicationFields;
