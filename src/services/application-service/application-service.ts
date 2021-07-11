@@ -15,11 +15,13 @@ export class ApplicationService {
 
   async create(application: Application): Promise<void> {
     try {
-      const applicationFields: any = null;
+      const applicationId: any = undefined;
+      const applicationFields: any = undefined;
       const item = {
         PartitionKey: `Application#${application.applicationId}`,
         SortKey: `Application#${application.applicationId}`,
         ...application,
+        applicationId,
         applicationFields
       };
 
