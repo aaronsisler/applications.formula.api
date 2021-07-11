@@ -3,11 +3,11 @@ import { handler } from "./index";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-let mockCreate: jest.Mock;
+let mockAddApplicationFields: jest.Mock;
 
 jest.mock("../../services/application-service", () => ({
   ApplicationService: jest.fn(() => ({
-    create: mockCreate
+    addApplicationFields: mockAddApplicationFields
   }))
 }));
 
@@ -17,29 +17,42 @@ jest.mock("../../utils/response-body-builder", () => ({
 
 jest.mock("../../utils/error-logger");
 
-describe("Handlers/Application:Post", () => {
+describe("Handlers/ApplicationFields:Post", () => {
   let callback: Callback<APIGatewayProxyResult>;
   let event: any;
 
   beforeEach(async () => {
     callback = jest.fn();
-    mockCreate = jest.fn().mockResolvedValue(undefined);
+    mockAddApplicationFields = jest.fn().mockResolvedValue(undefined);
   });
 
   describe("when an application is to be created", () => {
     beforeEach(() => {
       event = {
-        body: '{"applicationId":"mock-application-id","applicationName":"mock-application-name"}'
+        body: `[
+          {
+            "applicationId":"mock-application-id",
+            "applicationFieldId":"mock-application-field-id",
+            "applicationSequence": 1,
+            "inputFieldType": "NAME"
+          },
+          {
+            "applicationId":"mock-application-id",
+            "applicationFieldId":"mock-application-field-id",
+            "applicationSequence": 1,
+            "inputFieldType": "NAME"
+          }
+        ]`
       };
     });
 
-    describe("and when application is created", () => {
+    describe("and when a list of application fields are created", () => {
       beforeEach(async () => {
         await handler(event, undefined, callback);
       });
 
       it("should attempt to create user correctly", async () => {
-        expect(mockCreate).toHaveBeenCalled();
+        expect(mockAddApplicationFields).toHaveBeenCalled();
       });
 
       it("should return the correct response", () => {
@@ -51,19 +64,19 @@ describe("Handlers/Application:Post", () => {
       });
     });
 
-    describe("and when application is NOT created", () => {
+    describe("and when a list of application fields are NOT created", () => {
       beforeEach(async () => {
-        mockCreate = jest.fn().mockRejectedValue("mock-error");
+        mockAddApplicationFields = jest.fn().mockRejectedValue("mock-error");
         await handler(event, undefined, callback);
       });
 
-      it("should attempt to create application correctly", async () => {
-        expect(mockCreate).toHaveBeenCalled();
+      it("should attempt to create a list of application fields correctly", async () => {
+        expect(mockAddApplicationFields).toHaveBeenCalled();
       });
 
       it("should log error messages correctly", () => {
         expect(errorLogger).toHaveBeenCalledWith(
-          "Handler/Application:Post",
+          "Handler/ApplicationFields:Post",
           "mock-error"
         );
       });
