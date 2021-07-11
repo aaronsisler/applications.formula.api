@@ -15,13 +15,11 @@ export class TenantService {
 
   async create(tenant: Tenant): Promise<void> {
     try {
-      const tenantId: any = undefined;
       const applications: any = undefined;
       const item = {
         PartitionKey: `Tenant#${tenant.tenantId}`,
         SortKey: `Tenant#${tenant.tenantId}`,
         ...tenant,
-        tenantId,
         applications
       };
 
