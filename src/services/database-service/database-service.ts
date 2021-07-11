@@ -30,7 +30,7 @@ export class DatabaseService {
       const bacthItems = this.buildBatchItems(items);
       const params = {
         RequestItems: {
-          TABLE_NAME: bacthItems
+          [`${TABLE_NAME}`]: bacthItems
         }
       };
       console.log(params);
