@@ -167,6 +167,21 @@ functions:
             enabled: true
             origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+  application-application-get:
+    handler: dist/handlers/application-fields-get-handler/index.handler
+    description: Get application fields for an application
+    events:
+      - http:
+          path: /application/{applicationId}/application-field
+          method: GET
+          request:
+            parameters:
+              paths:
+                applicationId: true
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
   application-fields-post:
     handler: dist/handlers/application-fields-post-handler/index.handler
     description: Create application fields for a given application
