@@ -33,6 +33,7 @@ export class DatabaseService {
           TABLE_NAME: bacthItems
         }
       };
+      console.log(params);
       await this.documentClient.batchWrite(params).promise();
     } catch (error) {
       errorLogger("Service:Database", error);

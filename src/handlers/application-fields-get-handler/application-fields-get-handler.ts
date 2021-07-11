@@ -25,7 +25,7 @@ const applicationFieldsGet: APIGatewayProxyHandler = async (
     const result: ApplicationField[] =
       await applicationService.getApplicationFields(applicationId);
 
-    const response: HandlerResponse = responseBodyBuilder(201, "Success");
+    const response: HandlerResponse = responseBodyBuilder(201, result);
 
     callback(null, response);
   } catch (error) {
