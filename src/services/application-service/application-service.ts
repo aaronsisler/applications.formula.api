@@ -51,6 +51,32 @@ export class ApplicationService {
     }
   }
 
+  async addApplicationFields(
+    applicationFields: ApplicationField[]
+  ): Promise<void> {
+    try {
+      const items: object[] = this.mapApplicationFields(applicationFields);
+
+      return await this.databaseService.batchCreate(items);
+    } catch (error) {
+      errorLogger("Service:Application::addApplicationFields", error);
+      throw new Error("Record not created");
+    }
+  }
+
+  mapApplicationFields(applicationFields: ApplicationField[]): object[] {
+    const mappedApplicationFields: object[] = applicationFields.map(
+      (applicationField) => ({
+        PartitionKey: `Application#${applicationField.applicationId}`,
+        SortKey: `Application#${applicationField.applicationFieldId}`,
+        ...applicationField,
+        applicationId: null,
+        applicationFieldId: null
+      })
+    );
+    return mappedApplicationFields;
+  }
+
   async getApplicationFields(
     applicationId: string
   ): Promise<ApplicationField[]> {

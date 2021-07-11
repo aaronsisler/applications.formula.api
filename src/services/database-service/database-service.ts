@@ -25,6 +25,31 @@ export class DatabaseService {
     }
   }
 
+  async batchCreate(items: object[]): Promise<void> {
+    try {
+      const bacthItems = this.buildBatchItems(items);
+      const params = {
+        RequestItems: {
+          TABLE_NAME: bacthItems
+        }
+      };
+      await this.documentClient.batchWrite(params).promise();
+    } catch (error) {
+      errorLogger("Service:Database", error);
+      throw new Error("Record not created");
+    }
+  }
+
+  buildBatchItems(items: object[]) {
+    return items.map((item) => {
+      return {
+        PutRequest: {
+          Item: item
+        }
+      };
+    });
+  }
+
   async getItem(mainKey: string): Promise<DocumentClient.AttributeMap> {
     try {
       var params = {

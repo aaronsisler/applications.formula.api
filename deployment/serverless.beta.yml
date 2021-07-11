@@ -167,6 +167,17 @@ functions:
             enabled: true
             origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+  application-fields-post:
+    handler: dist/handlers/application-fields-post-handler/index.handler
+    description: Create application fields for a given application
+    events:
+      - http:
+          path: /application/application-field
+          method: POST
+          cors:
+            enabled: true
+            origins: ${file(./deployment/cors.json):allowedOrigins}
+            headers: ${file(./deployment/cors.json):headers}
 
 plugins:
   - serverless-domain-manager
