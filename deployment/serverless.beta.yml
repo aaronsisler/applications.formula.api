@@ -37,6 +37,7 @@ functions:
       - http:
           path: /health
           method: GET
+
   user-get:
     handler: dist/handlers/user-get-handler/index.handler
     description: Get a user
@@ -50,8 +51,8 @@ functions:
                 userId: true
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   user-post:
     handler: dist/handlers/user-post-handler/index.handler
     description: Create user
@@ -61,8 +62,8 @@ functions:
           method: POST
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   user-tenant-get:
     handler: dist/handlers/user-tenant-get-handler/index.handler
     description: Get tenants for a user
@@ -76,8 +77,8 @@ functions:
                 userId: true
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   user-tenant-post:
     handler: dist/handlers/user-tenant-post-handler/index.handler
     description: Add tenant to user
@@ -87,8 +88,8 @@ functions:
           method: POST
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   tenant-get:
     handler: dist/handlers/tenant-get-handler/index.handler
     description: Get a tenant
@@ -102,8 +103,8 @@ functions:
                 tenantId: true
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   tenant-post:
     handler: dist/handlers/tenant-post-handler/index.handler
     description: Create tenant
@@ -113,8 +114,8 @@ functions:
           method: POST
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   tenant-application-get:
     handler: dist/handlers/tenant-application-get-handler/index.handler
     description: Get applications for a tenant
@@ -128,8 +129,8 @@ functions:
                 tenantId: true
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   tenant-application-post:
     handler: dist/handlers/tenant-application-post-handler/index.handler
     description: Add application to a tenant
@@ -139,8 +140,8 @@ functions:
           method: POST
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   application-get:
     handler: dist/handlers/application-get-handler/index.handler
     description: Get an application
@@ -154,8 +155,8 @@ functions:
                 applicationId: true
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   application-post:
     handler: dist/handlers/application-post-handler/index.handler
     description: Create application
@@ -165,8 +166,8 @@ functions:
           method: POST
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   application-application-get:
     handler: dist/handlers/application-fields-get-handler/index.handler
     description: Get application fields for an application
@@ -180,8 +181,8 @@ functions:
                 applicationId: true
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
+
   application-fields-post:
     handler: dist/handlers/application-fields-post-handler/index.handler
     description: Create application fields for a given application
@@ -191,7 +192,6 @@ functions:
           method: POST
           cors:
             enabled: true
-            origins: ${file(./deployment/cors.json):allowedOrigins}
             headers: ${file(./deployment/cors.json):headers}
 
 plugins:

@@ -1,10 +1,5 @@
 {
   "ipRange": ["64.98.114.195"],
-  "allowedOrigins": [
-    "http://localhost:3000",
-    "https://*.eandbsolutions.com",
-    "https://eandbsolutions.com"
-  ],
   "headers": [
     "Access-Control-Allow-Origin",
     "Content-Type",
