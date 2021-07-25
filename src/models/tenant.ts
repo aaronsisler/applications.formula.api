@@ -2,9 +2,7 @@ import { TenantApplication } from "./tenant-application";
 
 export class Tenant {
   tenantId: string;
-
   tenantName: string;
-
   applications: TenantApplication[];
 
   constructor(options: {

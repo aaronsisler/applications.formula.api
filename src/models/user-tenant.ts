@@ -1,8 +1,6 @@
 export class UserTenant {
   userId: string;
-
   tenantId: string;
-
   tenantName: string;
 
   constructor(options: {

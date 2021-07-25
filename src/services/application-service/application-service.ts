@@ -64,17 +64,17 @@ export class ApplicationService {
     }
   }
 
-  mapApplicationFields(applicationFields: ApplicationField[]): object[] {
-    const mappedApplicationFields: object[] = applicationFields.map(
-      (applicationField) => ({
-        PartitionKey: `Application#${applicationField.applicationId}`,
-        SortKey: `ApplicationField#${applicationField.applicationFieldId}`,
-        ...applicationField,
-        applicationId: undefined,
-        applicationFieldId: undefined
-      })
-    );
-    return mappedApplicationFields;
+  async submitApplication(
+    applicationFields: ApplicationField[]
+  ): Promise<void> {
+    try {
+      const items: object[] = this.mapApplicationFields(applicationFields);
+
+      return await this.databaseService.batchCreate(items);
+    } catch (error) {
+      errorLogger("Service:Application::addApplicationFields", error);
+      throw new Error("Record not created");
+    }
   }
 
   async getApplicationFields(
@@ -100,5 +100,20 @@ export class ApplicationService {
       errorLogger("Service:Application::getApplicationFields", error);
       throw new Error("Records not retrieved");
     }
+  }
+
+  private mapApplicationFields(
+    applicationFields: ApplicationField[]
+  ): object[] {
+    const mappedApplicationFields: object[] = applicationFields.map(
+      (applicationField) => ({
+        PartitionKey: `Application#${applicationField.applicationId}`,
+        SortKey: `ApplicationField#${applicationField.applicationFieldId}`,
+        ...applicationField,
+        applicationId: undefined,
+        applicationFieldId: undefined
+      })
+    );
+    return mappedApplicationFields;
   }
 }

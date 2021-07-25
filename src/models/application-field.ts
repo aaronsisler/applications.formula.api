@@ -2,15 +2,10 @@ import { InputFieldType } from "./input-field-type";
 
 export class ApplicationField {
   applicationId: string;
-
   applicationFieldId: string;
-
   applicationSequence: number;
-
   inputFieldType: InputFieldType;
-
   inputFieldLabel: string;
-
   inputFieldName: string;
 
   constructor(options: {
