@@ -3,11 +3,11 @@ import { handler } from "./index";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-let mockCreate: jest.Mock;
+let mockSubmitApplication: jest.Mock;
 
 jest.mock("../../services/application-service", () => ({
   ApplicationService: jest.fn(() => ({
-    create: mockCreate
+    submitApplication: mockSubmitApplication
   }))
 }));
 
@@ -17,29 +17,29 @@ jest.mock("../../utils/response-body-builder", () => ({
 
 jest.mock("../../utils/error-logger");
 
-describe("Handlers/Application:Post", () => {
+describe("Handlers/ApplicationSubmission:Post", () => {
   let callback: Callback<APIGatewayProxyResult>;
   let event: any;
 
   beforeEach(async () => {
     callback = jest.fn();
-    mockCreate = jest.fn().mockResolvedValue(undefined);
+    mockSubmitApplication = jest.fn().mockResolvedValue(undefined);
   });
 
-  describe("when an application is to be created", () => {
+  describe("when an application is to be submitted", () => {
     beforeEach(() => {
       event = {
-        body: '{"applicationId":"mock-application-id","applicationName":"mock-application-name"}'
+        body: '{"applicationId":"mock-application-id","applicationFieldData":[]}'
       };
     });
 
-    describe("and when application is created", () => {
+    describe("and when application is submitted", () => {
       beforeEach(async () => {
         await handler(event, undefined, callback);
       });
 
-      it("should attempt to create application correctly", async () => {
-        expect(mockCreate).toHaveBeenCalled();
+      it("should attempt to submit application correctly", async () => {
+        expect(mockSubmitApplication).toHaveBeenCalled();
       });
 
       it("should return the correct response", () => {
@@ -51,19 +51,19 @@ describe("Handlers/Application:Post", () => {
       });
     });
 
-    describe("and when application is NOT created", () => {
+    describe("and when application is NOT submitted", () => {
       beforeEach(async () => {
-        mockCreate = jest.fn().mockRejectedValue("mock-error");
+        mockSubmitApplication = jest.fn().mockRejectedValue("mock-error");
         await handler(event, undefined, callback);
       });
 
-      it("should attempt to create application correctly", async () => {
-        expect(mockCreate).toHaveBeenCalled();
+      it("should attempt to submit application correctly", async () => {
+        expect(mockSubmitApplication).toHaveBeenCalled();
       });
 
       it("should log error messages correctly", () => {
         expect(errorLogger).toHaveBeenCalledWith(
-          "Handler/Application:Post",
+          "Handler/ApplicationSubmission:Post",
           "mock-error"
         );
       });

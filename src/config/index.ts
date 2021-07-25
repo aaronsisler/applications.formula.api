@@ -1,3 +1,6 @@
-import { TABLE_NAME, TOKEN_VALIDATION_URL } from "./config";
-
-export { TABLE_NAME, TOKEN_VALIDATION_URL };
+export {
+  QUEUE_NAME,
+  QUEUE_URL,
+  TABLE_NAME,
+  TOKEN_VALIDATION_URL
+} from "./config";

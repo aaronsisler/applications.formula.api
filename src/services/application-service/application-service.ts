@@ -1,16 +1,20 @@
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 import { DatabaseService } from "../database-service";
+import { QueueService } from "../queue-service";
 import { Application } from "../../models/application";
 import { ApplicationField } from "../../models/application-field";
+import { ApplicationSubmission } from "../../models/application-submission";
 import { databaseKeyParser } from "../../utils/database-key-parser";
 import { errorLogger } from "../../utils/error-logger";
 
 export class ApplicationService {
   private databaseService: DatabaseService;
+  private queueService: QueueService;
 
   constructor() {
     this.databaseService = new DatabaseService();
+    this.queueService = new QueueService();
   }
 
   async create(application: Application): Promise<void> {
@@ -65,15 +69,13 @@ export class ApplicationService {
   }
 
   async submitApplication(
-    applicationFields: ApplicationField[]
+    applicationSubmission: ApplicationSubmission
   ): Promise<void> {
     try {
-      const items: object[] = this.mapApplicationFields(applicationFields);
-
-      return await this.databaseService.batchCreate(items);
+      return await this.queueService.enqueue(applicationSubmission);
     } catch (error) {
-      errorLogger("Service:Application::addApplicationFields", error);
-      throw new Error("Record not created");
+      errorLogger("Service:Application::submitApplication", error);
+      throw new Error("Record not queued");
     }
   }
 

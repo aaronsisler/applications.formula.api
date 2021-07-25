@@ -168,6 +168,17 @@ functions:
             enabled: true
             headers: ${file(./deployment/cors.json):headers}
 
+  application-submission-post:
+    handler: dist/handlers/application-submission-post-handler/index.handler
+    description: Submit application
+    events:
+      - http:
+          path: /application-submission
+          method: POST
+          cors:
+            enabled: true
+            headers: ${file(./deployment/cors.json):headers}
+
   application-application-get:
     handler: dist/handlers/application-fields-get-handler/index.handler
     description: Get application fields for an application
