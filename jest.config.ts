@@ -11,7 +11,7 @@ export default {
   collectCoverageFrom: [
     "<rootDir>/src/**/*.ts",
     "!<rootDir>/src/models/*.ts", // No business logic should reside within models
-    "!<rootDir>/src/local-server/*.ts",
+    "!<rootDir>/src/local-server/*.ts"
   ],
 
   // The directory where Jest should output its coverage files
@@ -31,8 +31,8 @@ export default {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80,
-    },
+      statements: 80
+    }
   },
 
   // The maximum amount of workers used to run your tests.
@@ -49,12 +49,12 @@ export default {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     //   "**/__tests__/**/*.[jt]s?(x)",
-    "**/?(*.)+(spec).ts",
+    "**/?(*.)+(spec).ts"
   ],
 
   // An array of regexp pattern strings that are matched against all test paths,
   // matched tests are skipped
-  testPathIgnorePatterns: ["/node_modules/"],
+  testPathIgnorePatterns: ["/node_modules/"]
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],

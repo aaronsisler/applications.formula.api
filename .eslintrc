@@ -5,12 +5,13 @@
     "jest": true,
     "node": true
   },
-  "extends": ["prettier", "airbnb-base"],
+  "extends": ["prettier", "airbnb-base", "plugin:import/typescript"],
   "plugins": ["prettier"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018
   },
@@ -19,10 +20,18 @@
     "arrow-parens": "off",
     "comma-dangle": "off",
     "implicit-arrow-linebreak": "off",
+    "import/prefer-default-export": "off",
     "prettier/prettier": [
       "error",
       {
         "printWidth": 80
+      }
+    ],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never"
       }
     ]
   }

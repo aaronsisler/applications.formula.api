@@ -85,7 +85,7 @@ export class DatabaseService {
       return Items;
     } catch (error) {
       errorLogger("Service:Database", error);
-      throw new Error("Record not created");
+      throw new Error("Records not retrieved");
     }
   }
 }

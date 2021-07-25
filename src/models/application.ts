@@ -2,7 +2,9 @@ import { ApplicationField } from "./application-field";
 
 export class Application {
   applicationId: string;
+
   applicationName: string;
+
   applicationFields: ApplicationField[];
 
   constructor(options: {
