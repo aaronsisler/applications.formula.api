@@ -5,13 +5,12 @@
     "jest": true,
     "node": true
   },
-  "extends": ["prettier", "airbnb-base", "plugin:import/typescript"],
+  "extends": ["prettier", "airbnb-base"],
   "plugins": ["prettier"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018
   },
@@ -25,13 +24,6 @@
       "error",
       {
         "printWidth": 80
-      }
-    ],
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "ts": "never"
       }
     ]
   }
