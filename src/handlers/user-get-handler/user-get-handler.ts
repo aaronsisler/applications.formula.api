@@ -24,7 +24,7 @@ const userGet: APIGatewayProxyHandler = async (
 
     const result: User = await userService.get(userId);
 
-    const response: HandlerResponse = responseBodyBuilder(201, result);
+    const response: HandlerResponse = responseBodyBuilder(200, result);
 
     callback(null, response);
   } catch (error) {

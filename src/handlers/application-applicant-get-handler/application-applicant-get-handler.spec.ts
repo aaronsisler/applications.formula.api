@@ -3,11 +3,11 @@ import { handler } from "./index";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-let mockGetTenants: jest.Mock;
+let mockGetApplicants: jest.Mock;
 
-jest.mock("../../services/user-service", () => ({
-  UserService: jest.fn(() => ({
-    getTenants: mockGetTenants
+jest.mock("../../services/application-service", () => ({
+  ApplicationService: jest.fn(() => ({
+    getApplicants: mockGetApplicants
   }))
 }));
 
@@ -17,23 +17,23 @@ jest.mock("../../utils/response-body-builder", () => ({
 
 jest.mock("../../utils/error-logger");
 
-describe("Handlers/User:Tenant:Get", () => {
+describe("Handlers/Application:Applicant:Get", () => {
   let callback: Callback<APIGatewayProxyResult>;
   let event: any;
 
   beforeEach(async () => {
     callback = jest.fn();
-    event = { pathParameters: { userId: "mock-user-id" } };
+    event = { pathParameters: { applicationId: "mock-application-id" } };
   });
 
-  describe("when tenants are retrieved for a user", () => {
+  describe("when applicants are retrieved for an application", () => {
     beforeEach(async () => {
-      mockGetTenants = jest.fn().mockResolvedValue(undefined);
+      mockGetApplicants = jest.fn().mockResolvedValue(undefined);
       await handler(event, undefined, callback);
     });
 
-    it("should attempt to get user's tenants correctly", async () => {
-      expect(mockGetTenants).toHaveBeenCalledWith("mock-user-id");
+    it("should attempt to get application's applicants correctly", async () => {
+      expect(mockGetApplicants).toHaveBeenCalledWith("mock-application-id");
     });
 
     xit("should return the correct response", () => {
@@ -45,19 +45,19 @@ describe("Handlers/User:Tenant:Get", () => {
     });
   });
 
-  describe("and when tenants are NOT retrieved for a user", () => {
+  describe("when applicants are NOT retrieved for an application", () => {
     beforeEach(async () => {
-      mockGetTenants = jest.fn().mockRejectedValue("mock-error");
+      mockGetApplicants = jest.fn().mockRejectedValue("mock-error");
       await handler(event, undefined, callback);
     });
 
-    it("should attempt to get user's tenants correctly", async () => {
-      expect(mockGetTenants).toHaveBeenCalledWith("mock-user-id");
+    it("should attempt to get application's applicants correctly", async () => {
+      expect(mockGetApplicants).toHaveBeenCalledWith("mock-application-id");
     });
 
     it("should log error messages correctly", () => {
       expect(errorLogger).toHaveBeenCalledWith(
-        "Handler/User:Tenant:Get",
+        "Handler/Application:Applicant:Get",
         "mock-error"
       );
     });

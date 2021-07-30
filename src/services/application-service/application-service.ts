@@ -3,6 +3,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { DatabaseService } from "../database-service";
 import { QueueService } from "../queue-service";
 import { Application } from "../../models/application";
+import { ApplicationApplicant } from "../../models/application-applicant";
 import { ApplicationField } from "../../models/application-field";
 import { ApplicationSubmission } from "../../models/application-submission";
 import { databaseKeyParser } from "../../utils/database-key-parser";
@@ -100,6 +101,30 @@ export class ApplicationService {
       return Promise.resolve(applicationFields);
     } catch (error) {
       errorLogger("Service:Application::getApplicationFields", error);
+      throw new Error("Records not retrieved");
+    }
+  }
+
+  async getApplicants(applicationId: string): Promise<ApplicationApplicant[]> {
+    try {
+      const rawApplicationFields = await this.databaseService.getItems(
+        `Application#${applicationId}`,
+        "Applicant"
+      );
+
+      const applicationApplicants: ApplicationApplicant[] =
+        rawApplicationFields.map(
+          (item: DocumentClient.AttributeMap) =>
+            new ApplicationApplicant({
+              applicationId: databaseKeyParser(item.PartitionKey),
+              applicantId: databaseKeyParser(item.SortKey),
+              ...item
+            })
+        );
+
+      return Promise.resolve(applicationApplicants);
+    } catch (error) {
+      errorLogger("Service:Application::getApplicants", error);
       throw new Error("Records not retrieved");
     }
   }

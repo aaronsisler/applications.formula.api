@@ -168,6 +168,20 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
+  application-applicant-get:
+    handler: dist/handlers/application-applicant-get-handler/index.handler
+    description: Get application's applicants
+    events:
+      - http:
+          path: /application/{applicationId}/applicant
+          method: GET
+          request:
+            parameters:
+              paths:
+                applicationId: true
+          cors:
+            headers: ${file(./deployment/cors.json):headers}
+
   application-fields-get:
     handler: dist/handlers/application-fields-get-handler/index.handler
     description: Get application fields for an application

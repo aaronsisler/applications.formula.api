@@ -26,7 +26,7 @@ export const tenantApplicationGet: APIGatewayProxyHandler = async (
       tenantId
     );
 
-    const response: HandlerResponse = responseBodyBuilder(201, result);
+    const response: HandlerResponse = responseBodyBuilder(200, result);
 
     callback(null, response);
   } catch (error) {
