@@ -9,11 +9,6 @@ export class ApplicantService {
   async getApplicantPdfSignedUrl(applicantId: string): Promise<string> {
     try {
       const s3: S3 = new aws.S3();
-      // aws.config.update({
-      //   accessKeyId: "your access key",
-      //   secretAccessKey: "you secret key"
-      // });
-
       const signedUrlExpireSeconds = 60; // your expiry time in seconds.
 
       return s3.getSignedUrl("getObject", {
