@@ -1,6 +1,7 @@
 export {
   QUEUE_NAME,
   QUEUE_URL,
+  S3_BUCKET_NAME,
   TABLE_NAME,
   TOKEN_VALIDATION_URL
 } from "./config";

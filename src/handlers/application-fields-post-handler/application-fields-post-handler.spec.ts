@@ -51,7 +51,7 @@ describe("Handlers/ApplicationFields:Post", () => {
         await handler(event, undefined, callback);
       });
 
-      it("should attempt to create user correctly", async () => {
+      it("should attempt to create application fields correctly", async () => {
         expect(mockAddApplicationFields).toHaveBeenCalled();
       });
 
