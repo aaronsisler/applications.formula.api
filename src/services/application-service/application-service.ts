@@ -35,18 +35,14 @@ export class ApplicationService {
     }
   }
 
-  async getApplicationWithFields(applicationId: string): Promise<Application> {
+  async get(applicationId: string): Promise<Application> {
     try {
       const rawApplication = await this.databaseService.getItem(
         `Application#${applicationId}`
       );
 
-      const applicationFields: ApplicationField[] =
-        await this.getApplicationFields(applicationId);
-
       const application = new Application({
-        ...rawApplication,
-        applicationFields: applicationFields
+        ...rawApplication
       });
 
       return Promise.resolve(application);
@@ -74,7 +70,28 @@ export class ApplicationService {
 
       return Promise.resolve(application);
     } catch (error) {
-      errorLogger("Service:Application::get", error);
+      errorLogger("Service:Application::getApplicationWithApplicants", error);
+      throw new Error("Records not retrieved");
+    }
+  }
+
+  async getApplicationWithFields(applicationId: string): Promise<Application> {
+    try {
+      const rawApplication = await this.databaseService.getItem(
+        `Application#${applicationId}`
+      );
+
+      const applicationFields: ApplicationField[] =
+        await this.getApplicationFields(applicationId);
+
+      const application = new Application({
+        ...rawApplication,
+        applicationFields: applicationFields
+      });
+
+      return Promise.resolve(application);
+    } catch (error) {
+      errorLogger("Service:Application::getApplicationWithFields", error);
       throw new Error("Records not retrieved");
     }
   }

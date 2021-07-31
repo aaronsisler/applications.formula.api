@@ -24,6 +24,11 @@ const applicationGet: APIGatewayProxyHandler = async (
     const { withApplicants, withFields } = queryStringParameters;
 
     let result: Application;
+
+    if (!!withApplicants && !!withFields) {
+      result = await applicationService.get(applicationId);
+    }
+
     if (withApplicants) {
       result = await applicationService.getApplicationWithApplicants(
         applicationId
