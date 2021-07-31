@@ -19,10 +19,20 @@ const applicationGet: APIGatewayProxyHandler = async (
 ): Promise<APIGatewayProxyResult> => {
   try {
     const applicationService = new ApplicationService();
-    const { pathParameters } = event;
+    const { pathParameters, queryStringParameters = {} } = event;
     const { applicationId } = pathParameters;
+    const { withApplicants, withFields } = queryStringParameters;
 
-    const result: Application = await applicationService.get(applicationId);
+    let result: Application;
+    if (withApplicants) {
+      result = await applicationService.getApplicationWithApplicants(
+        applicationId
+      );
+    }
+
+    if (withFields) {
+      result = await applicationService.getApplicationWithFields(applicationId);
+    }
 
     const response: HandlerResponse = responseBodyBuilder(200, result);
 

@@ -35,7 +35,7 @@ export class ApplicationService {
     }
   }
 
-  async get(applicationId: string): Promise<Application> {
+  async getApplicationWithFields(applicationId: string): Promise<Application> {
     try {
       const rawApplication = await this.databaseService.getItem(
         `Application#${applicationId}`
@@ -47,6 +47,29 @@ export class ApplicationService {
       const application = new Application({
         ...rawApplication,
         applicationFields: applicationFields
+      });
+
+      return Promise.resolve(application);
+    } catch (error) {
+      errorLogger("Service:Application::get", error);
+      throw new Error("Records not retrieved");
+    }
+  }
+
+  async getApplicationWithApplicants(
+    applicationId: string
+  ): Promise<Application> {
+    try {
+      const rawApplication = await this.databaseService.getItem(
+        `Application#${applicationId}`
+      );
+
+      const applicationApplicants: ApplicationApplicant[] =
+        await this.getApplicants(applicationId);
+
+      const application = new Application({
+        ...rawApplication,
+        applicants: applicationApplicants
       });
 
       return Promise.resolve(application);
