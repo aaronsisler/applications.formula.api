@@ -21,7 +21,7 @@ const userPost: APIGatewayProxyHandler = async (
     const userService = new UserService();
     const { body: rawBody } = event;
     const body = JSON.parse(rawBody);
-    const user: User = new User({ ...body });
+    const user: User = new User({ isOnboarded: false, ...body });
 
     await userService.create(user);
 
