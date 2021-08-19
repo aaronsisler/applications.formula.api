@@ -45,6 +45,25 @@ export class UserService {
     }
   }
 
+  async getAll(): Promise<User[]> {
+    try {
+      const rawUsers = await this.databaseService.getItems("User", "User");
+
+      const users = rawUsers.map(
+        (item: DocumentClient.AttributeMap) =>
+          new User({
+            userId: databaseKeyParser(item.PartitionKey),
+            ...item
+          })
+      );
+
+      return Promise.resolve(users);
+    } catch (error) {
+      errorLogger("Service:User::getAll", error);
+      throw new Error("Records not retrieved");
+    }
+  }
+
   async addTenant(userTenant: UserTenant): Promise<void> {
     try {
       const item = {

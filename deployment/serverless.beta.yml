@@ -38,6 +38,16 @@ functions:
           path: /health
           method: GET
 
+  users-get:
+    handler: dist/handlers/users-get-handler/index.handler
+    description: Get users
+    events:
+      - http:
+          path: /users
+          method: GET
+          cors:
+            headers: ${file(./deployment/cors.json):headers}
+
   users-get-one:
     handler: dist/handlers/users-get-one-handler/index.handler
     description: Get a user
@@ -90,6 +100,16 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
+  tenants-get:
+    handler: dist/handlers/tenants-get-handler/index.handler
+    description: Get a tenant
+    events:
+      - http:
+          path: /tenants
+          method: GET
+          cors:
+            headers: ${file(./deployment/cors.json):headers}
+
   tenants-get-one:
     handler: dist/handlers/tenants-get-one-handler/index.handler
     description: Get a tenant
@@ -111,16 +131,6 @@ functions:
       - http:
           path: /tenants
           method: POST
-          cors:
-            headers: ${file(./deployment/cors.json):headers}
-
-  tenants-get:
-    handler: dist/handlers/tenants-get-handler/index.handler
-    description: Get a tenant
-    events:
-      - http:
-          path: /tenants
-          method: GET
           cors:
             headers: ${file(./deployment/cors.json):headers}
 

@@ -3,11 +3,11 @@ import { handler } from "./index";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-let mockGet: jest.Mock;
+let mockGetAll: jest.Mock;
 
 jest.mock("../../services/user-service", () => ({
   UserService: jest.fn(() => ({
-    get: mockGet
+    getAll: mockGetAll
   }))
 }));
 
@@ -17,7 +17,7 @@ jest.mock("../../utils/response-body-builder", () => ({
 
 jest.mock("../../utils/error-logger");
 
-describe("Handlers/Users:Get:userId", () => {
+describe("Handlers/Users:Get", () => {
   let callback: Callback<APIGatewayProxyResult>;
   let event: any;
 
@@ -25,18 +25,18 @@ describe("Handlers/Users:Get:userId", () => {
     callback = jest.fn();
   });
 
-  describe("and when a user is retrieved", () => {
+  describe("and when users are retrieved", () => {
     beforeEach(() => {
-      event = { pathParameters: { userId: "mock-user-id" } };
+      event = {};
     });
 
     beforeEach(async () => {
-      mockGet = jest.fn().mockResolvedValue(undefined);
+      mockGetAll = jest.fn().mockResolvedValue(undefined);
       await handler(event, undefined, callback);
     });
 
-    it("should attempt to get a user correctly", async () => {
-      expect(mockGet).toHaveBeenCalledWith("mock-user-id");
+    it("should attempt to get users correctly", async () => {
+      expect(mockGetAll).toHaveBeenCalled();
     });
 
     xit("should return the correct response", () => {
@@ -48,19 +48,19 @@ describe("Handlers/Users:Get:userId", () => {
     });
   });
 
-  describe("and when a user is NOT retrieved", () => {
+  describe("and when users are NOT retrieved", () => {
     beforeEach(async () => {
-      mockGet = jest.fn().mockRejectedValue("mock-error");
+      mockGetAll = jest.fn().mockRejectedValue("mock-error");
       await handler(event, undefined, callback);
     });
 
-    it("should attempt to get a user correctly", async () => {
-      expect(mockGet).toHaveBeenCalledWith("mock-user-id");
+    it("should attempt to get users correctly", async () => {
+      expect(mockGetAll).toHaveBeenCalled();
     });
 
     it("should log error messages correctly", () => {
       expect(errorLogger).toHaveBeenCalledWith(
-        "Handler/Users:Get:userId",
+        "Handler/Users:Get",
         "mock-error"
       );
     });
