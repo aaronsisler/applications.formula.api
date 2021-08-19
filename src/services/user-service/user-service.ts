@@ -17,7 +17,7 @@ export class UserService {
     try {
       const tenants: any = null;
       const item = {
-        PartitionKey: `User#${user.userId}`,
+        PartitionKey: "User",
         SortKey: `User#${user.userId}`,
         ...user,
         tenants
@@ -32,7 +32,10 @@ export class UserService {
 
   async get(userId: string): Promise<User> {
     try {
-      const rawUser = await this.databaseService.getItem(`User#${userId}`);
+      const rawUser = await this.databaseService.getItem(
+        "User",
+        `User#${userId}`
+      );
       const user = new User({ ...rawUser });
 
       return Promise.resolve(user);

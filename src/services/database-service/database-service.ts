@@ -51,10 +51,13 @@ export class DatabaseService {
     });
   }
 
-  async getItem(mainKey: string): Promise<DocumentClient.AttributeMap> {
+  async getItem(
+    partitionKey: string,
+    sortKey: string
+  ): Promise<DocumentClient.AttributeMap> {
     try {
       var params = {
-        Key: { PartitionKey: mainKey, SortKey: mainKey },
+        Key: { PartitionKey: partitionKey, SortKey: sortKey },
         TableName: TABLE_NAME
       };
       const { Item } = await this.documentClient.get(params).promise();

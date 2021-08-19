@@ -17,7 +17,7 @@ export class TenantService {
     try {
       const applications: any = undefined;
       const item = {
-        PartitionKey: `Tenant#${tenant.tenantId}`,
+        PartitionKey: "Tenant",
         SortKey: `Tenant#${tenant.tenantId}`,
         ...tenant,
         applications
@@ -33,6 +33,7 @@ export class TenantService {
   async get(tenantId: string): Promise<Tenant> {
     try {
       const rawTenent = await this.databaseService.getItem(
+        "Tenant",
         `Tenant#${tenantId}`
       );
 

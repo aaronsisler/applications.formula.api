@@ -38,6 +38,7 @@ export class ApplicationService {
   async get(applicationId: string): Promise<Application> {
     try {
       const rawApplication = await this.databaseService.getItem(
+        "Application",
         `Application#${applicationId}`
       );
 
@@ -57,6 +58,7 @@ export class ApplicationService {
   ): Promise<Application> {
     try {
       const rawApplication = await this.databaseService.getItem(
+        "Application",
         `Application#${applicationId}`
       );
 
@@ -78,6 +80,7 @@ export class ApplicationService {
   async getApplicationWithFields(applicationId: string): Promise<Application> {
     try {
       const rawApplication = await this.databaseService.getItem(
+        "Application",
         `Application#${applicationId}`
       );
 
