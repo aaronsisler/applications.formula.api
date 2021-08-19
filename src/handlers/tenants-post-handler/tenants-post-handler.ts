@@ -12,7 +12,7 @@ import { TenantService } from "../../services/tenant-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-const tenantPost: APIGatewayProxyHandler = async (
+const tenantsPost: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   _context: Context,
   callback: Callback<APIGatewayProxyResult>
@@ -38,4 +38,4 @@ const tenantPost: APIGatewayProxyHandler = async (
   }
 };
 
-export { tenantPost };
+export { tenantsPost };
