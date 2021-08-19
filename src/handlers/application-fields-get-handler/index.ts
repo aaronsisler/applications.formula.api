@@ -1,3 +1,1 @@
-import { applicationFieldsGet } from "./application-fields-get-handler";
-
-export { applicationFieldsGet as handler };
+export { applicationFieldsGet as handler } from "./application-fields-get-handler";

@@ -1,3 +1,1 @@
-import { usersPost } from "./users-post-handler";
-
-export { usersPost as handler };
+export { usersPost as handler } from "./users-post-handler";

@@ -1,3 +1,1 @@
-import { applicationFieldsPost } from "./application-fields-post-handler";
-
-export { applicationFieldsPost as handler };
+export { applicationFieldsPost as handler } from "./application-fields-post-handler";

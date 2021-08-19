@@ -1,3 +1,1 @@
-import { tenantsPost } from "./tenants-post-handler";
-
-export { tenantsPost as handler };
+export { tenantsPost as handler } from "./tenants-post-handler";

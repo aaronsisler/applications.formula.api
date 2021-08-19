@@ -7,33 +7,29 @@ import {
 } from "aws-lambda";
 
 import { HandlerResponse } from "../../models/handler-response";
-import { User } from "../../models/user";
-import { UserService } from "../../services/user-service";
+import { ApplicantService } from "../../services/applicant-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-export const usersPost: APIGatewayProxyHandler = async (
+const applicantsGetPdfSignedUrl: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   _context: Context,
   callback: Callback<APIGatewayProxyResult>
 ): Promise<APIGatewayProxyResult> => {
   try {
-    const userService = new UserService();
-    const { body: rawBody } = event;
-    const body = JSON.parse(rawBody);
-    const user: User = new User({
-      isAdmin: false,
-      isOnboarded: false,
-      ...body
-    });
+    const applicantService = new ApplicantService();
+    const { pathParameters } = event;
+    const { applicantId } = pathParameters;
 
-    await userService.create(user);
+    const result: string = await applicantService.getApplicantPdfSignedUrl(
+      applicantId
+    );
 
-    const response: HandlerResponse = responseBodyBuilder(201, "Success");
+    const response: HandlerResponse = responseBodyBuilder(200, result);
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/Users:Post", error);
+    errorLogger("Handler/Applicants:Get:PdfSignedUrl", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);
@@ -41,3 +37,5 @@ export const usersPost: APIGatewayProxyHandler = async (
     return;
   }
 };
+
+export { applicantsGetPdfSignedUrl };

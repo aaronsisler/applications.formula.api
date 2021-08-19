@@ -6,34 +6,30 @@ import {
   Context
 } from "aws-lambda";
 
+import { ApplicationApplicant } from "../../models/application-applicant";
 import { HandlerResponse } from "../../models/handler-response";
-import { User } from "../../models/user";
-import { UserService } from "../../services/user-service";
+import { ApplicationService } from "../../services/application-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-export const usersPost: APIGatewayProxyHandler = async (
+const applicationsApplicantsGet: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   _context: Context,
   callback: Callback<APIGatewayProxyResult>
 ): Promise<APIGatewayProxyResult> => {
   try {
-    const userService = new UserService();
-    const { body: rawBody } = event;
-    const body = JSON.parse(rawBody);
-    const user: User = new User({
-      isAdmin: false,
-      isOnboarded: false,
-      ...body
-    });
+    const applicationService = new ApplicationService();
+    const { pathParameters } = event;
+    const { applicationId } = pathParameters;
 
-    await userService.create(user);
+    const result: ApplicationApplicant[] =
+      await applicationService.getApplicants(applicationId);
 
-    const response: HandlerResponse = responseBodyBuilder(201, "Success");
+    const response: HandlerResponse = responseBodyBuilder(200, result);
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/Users:Post", error);
+    errorLogger("Handler/Applications:Applicants:Get", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);
@@ -41,3 +37,5 @@ export const usersPost: APIGatewayProxyHandler = async (
     return;
   }
 };
+
+export { applicationsApplicantsGet };

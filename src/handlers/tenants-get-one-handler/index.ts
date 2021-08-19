@@ -1,3 +1,1 @@
-import { tenantsGetOne } from "./tenants-get-one-handler";
-
-export { tenantsGetOne as handler };
+export { tenantsGetOne as handler } from "./tenants-get-one-handler";

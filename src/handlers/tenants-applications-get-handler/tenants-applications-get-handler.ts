@@ -7,33 +7,30 @@ import {
 } from "aws-lambda";
 
 import { HandlerResponse } from "../../models/handler-response";
-import { User } from "../../models/user";
-import { UserService } from "../../services/user-service";
+import { TenantApplication } from "../../models/tenant-application";
+import { TenantService } from "../../services/tenant-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-export const usersPost: APIGatewayProxyHandler = async (
+export const tenantsApplicationsGet: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   _context: Context,
   callback: Callback<APIGatewayProxyResult>
 ): Promise<APIGatewayProxyResult> => {
   try {
-    const userService = new UserService();
-    const { body: rawBody } = event;
-    const body = JSON.parse(rawBody);
-    const user: User = new User({
-      isAdmin: false,
-      isOnboarded: false,
-      ...body
-    });
+    const tenantService = new TenantService();
+    const { pathParameters } = event;
+    const { tenantId } = pathParameters;
 
-    await userService.create(user);
+    const result: TenantApplication[] = await tenantService.getApplications(
+      tenantId
+    );
 
-    const response: HandlerResponse = responseBodyBuilder(201, "Success");
+    const response: HandlerResponse = responseBodyBuilder(200, result);
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/Users:Post", error);
+    errorLogger("Handler/Tenants:Applications:Get", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);

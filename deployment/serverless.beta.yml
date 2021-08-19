@@ -124,7 +124,7 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
-  tenant-application-get:
+  tenants-applications-get:
     handler: dist/handlers/tenants-applications-get-handler/index.handler
     description: Get applications for a tenant
     events:
@@ -138,7 +138,7 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
-  tenant-application-post:
+  tenants-applications-post:
     handler: dist/handlers/tenants-applications-post-handler/index.handler
     description: Add application to a tenant
     events:
@@ -228,12 +228,12 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
-  applicants-get:
-    handler: dist/handlers/applicants-pdf-get-handler/index.handler
+  applicants-get-pdf:
+    handler: dist/handlers/applicants-get-pdf-handler/index.handler
     description: Get an applicant's PDF using an S3 signed URL
     events:
       - http:
-          path: /applicants/{applicantId}
+          path: /applicants/{applicantId}/pdf
           method: GET
           request:
             parameters:

@@ -1,3 +1,1 @@
-import { health } from "./health-handler";
-
-export { health as handler };
+export { health as handler } from "./health-handler";

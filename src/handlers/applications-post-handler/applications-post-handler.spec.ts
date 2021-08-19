@@ -5,8 +5,8 @@ import { responseBodyBuilder } from "../../utils/response-body-builder";
 
 let mockCreate: jest.Mock;
 
-jest.mock("../../services/user-service", () => ({
-  UserService: jest.fn(() => ({
+jest.mock("../../services/application-service", () => ({
+  ApplicationService: jest.fn(() => ({
     create: mockCreate
   }))
 }));
@@ -17,7 +17,7 @@ jest.mock("../../utils/response-body-builder", () => ({
 
 jest.mock("../../utils/error-logger");
 
-describe("Handlers/Users:Post", () => {
+describe("Handlers/Applications:Post", () => {
   let callback: Callback<APIGatewayProxyResult>;
   let event: any;
 
@@ -26,19 +26,19 @@ describe("Handlers/Users:Post", () => {
     mockCreate = jest.fn().mockResolvedValue(undefined);
   });
 
-  describe("when a user is to be created", () => {
+  describe("when an application is to be created", () => {
     beforeEach(() => {
       event = {
-        body: '{"firstName":"mock-first-name","lastName":"mock-last-name"}'
+        body: '{"applicationId":"mock-application-id","applicationName":"mock-application-name"}'
       };
     });
 
-    describe("and when user is created", () => {
+    describe("and when application is created", () => {
       beforeEach(async () => {
         await handler(event, undefined, callback);
       });
 
-      it("should attempt to create user correctly", async () => {
+      it("should attempt to create application correctly", async () => {
         expect(mockCreate).toHaveBeenCalled();
       });
 
@@ -51,19 +51,19 @@ describe("Handlers/Users:Post", () => {
       });
     });
 
-    describe("and when user is NOT created", () => {
+    describe("and when application is NOT created", () => {
       beforeEach(async () => {
         mockCreate = jest.fn().mockRejectedValue("mock-error");
         await handler(event, undefined, callback);
       });
 
-      it("should attempt to create user correctly", async () => {
+      it("should attempt to create application correctly", async () => {
         expect(mockCreate).toHaveBeenCalled();
       });
 
       it("should log error messages correctly", () => {
         expect(errorLogger).toHaveBeenCalledWith(
-          "Handler/Users:Post",
+          "Handler/Applications:Post",
           "mock-error"
         );
       });
