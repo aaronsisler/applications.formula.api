@@ -145,7 +145,7 @@ functions:
       - http:
           path: /tenants/{tenantId}/applications
           method: POST
-           request:
+          request:
             parameters:
               paths:
                 tenantId: true
