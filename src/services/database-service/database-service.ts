@@ -1,5 +1,8 @@
 import aws, { DynamoDB } from "aws-sdk";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import {
+  DocumentClient,
+  ExpressionAttributeValueMap
+} from "aws-sdk/clients/dynamodb";
 
 import { TABLE_NAME } from "../../config";
 import { errorLogger } from "../../utils/error-logger";
@@ -68,16 +71,19 @@ export class DatabaseService {
 
   async getItems(
     partitionKey: string,
-    sortKey: string
+    sortKey: string = "empty"
   ): Promise<DocumentClient.ItemList> {
     try {
+      const keyConditionExpression =
+        this.getItemsKeyConditionExpression(sortKey);
+      const expressionAttributeValues = this.getItemsExpressionAttributeValues(
+        partitionKey,
+        sortKey
+      );
+
       var params = {
-        KeyConditionExpression:
-          "PartitionKey = :partitionKey AND begins_with ( SortKey , :sortKey )",
-        ExpressionAttributeValues: {
-          ":partitionKey": partitionKey,
-          ":sortKey": sortKey
-        },
+        KeyConditionExpression: keyConditionExpression,
+        ExpressionAttributeValues: expressionAttributeValues,
         TableName: TABLE_NAME
       };
       const { Items } = await this.documentClient.query(params).promise();
@@ -86,6 +92,31 @@ export class DatabaseService {
     } catch (error) {
       errorLogger("Service:Database", error);
       throw new Error("Records not retrieved");
+    }
+  }
+
+  private getItemsKeyConditionExpression(sortKey: string): string {
+    if (sortKey === "empty") {
+      return "begins_with ( PartitionKey , :partitionKey ) AND begins_with ( SortKey , :sortKey )";
+    } else {
+      return "PartitionKey = :partitionKey AND begins_with ( SortKey , :sortKey )";
+    }
+  }
+
+  private getItemsExpressionAttributeValues(
+    partitionKey: string,
+    sortKey: string
+  ): any {
+    if (sortKey === "empty") {
+      return {
+        ":partitionKey": partitionKey,
+        ":sortKey": partitionKey
+      };
+    } else {
+      return {
+        ":partitionKey": partitionKey,
+        ":sortKey": sortKey
+      };
     }
   }
 }

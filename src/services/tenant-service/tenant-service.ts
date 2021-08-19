@@ -52,6 +52,25 @@ export class TenantService {
     }
   }
 
+  async getAll(): Promise<Tenant[]> {
+    try {
+      const rawTenants = await this.databaseService.getItems("Tenant");
+
+      const tenants = rawTenants.map(
+        (item: DocumentClient.AttributeMap) =>
+          new Tenant({
+            tenantId: databaseKeyParser(item.PartitionKey),
+            ...item
+          })
+      );
+
+      return Promise.resolve(tenants);
+    } catch (error) {
+      errorLogger("Service:Tenant::getAll", error);
+      throw new Error("Records not retrieved");
+    }
+  }
+
   async addApplication(tenantApplication: TenantApplication): Promise<void> {
     try {
       const item = {

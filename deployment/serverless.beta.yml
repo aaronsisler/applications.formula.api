@@ -86,12 +86,12 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
-  tenant-get:
-    handler: dist/handlers/tenant-get-handler/index.handler
+  tenants-get-one:
+    handler: dist/handlers/tenants-get-one-handler/index.handler
     description: Get a tenant
     events:
       - http:
-          path: /tenant/{tenantId}
+          path: /tenants/{tenantId}
           method: GET
           request:
             parameters:
@@ -100,13 +100,23 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
-  tenant-post:
+  tenants-post:
     handler: dist/handlers/tenant-post-handler/index.handler
     description: Create tenant
     events:
       - http:
-          path: /tenant
+          path: /tenants
           method: POST
+          cors:
+            headers: ${file(./deployment/cors.json):headers}
+
+  tenants-get:
+    handler: dist/handlers/tenants-get-handler/index.handler
+    description: Get a tenant
+    events:
+      - http:
+          path: /tenants
+          method: GET
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
