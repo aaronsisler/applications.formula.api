@@ -101,7 +101,7 @@ functions:
             headers: ${file(./deployment/cors.json):headers}
 
   tenants-post:
-    handler: dist/handlers/tenant-post-handler/index.handler
+    handler: dist/handlers/tenants-post-handler/index.handler
     description: Create tenant
     events:
       - http:
