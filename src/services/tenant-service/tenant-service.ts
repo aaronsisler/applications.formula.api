@@ -54,7 +54,10 @@ export class TenantService {
 
   async getAll(): Promise<Tenant[]> {
     try {
-      const rawTenants = await this.databaseService.getItems("Tenant");
+      const rawTenants = await this.databaseService.getItems(
+        "Tenant",
+        "Tenant"
+      );
 
       const tenants = rawTenants.map(
         (item: DocumentClient.AttributeMap) =>
