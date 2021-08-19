@@ -32,7 +32,7 @@ export class TenantService {
 
   async get(tenantId: string): Promise<Tenant> {
     try {
-      const rawTenent = await this.databaseService.getItem(
+      const rawTenant = await this.databaseService.getItem(
         "Tenant",
         `Tenant#${tenantId}`
       );
@@ -42,7 +42,7 @@ export class TenantService {
       );
 
       const tenant = new Tenant({
-        ...rawTenent,
+        ...rawTenant,
         applications
       });
 

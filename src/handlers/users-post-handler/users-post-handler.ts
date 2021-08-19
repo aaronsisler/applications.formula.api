@@ -12,23 +12,28 @@ import { UserService } from "../../services/user-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-const userGet: APIGatewayProxyHandler = async (
+const usersPost: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   _context: Context,
   callback: Callback<APIGatewayProxyResult>
 ): Promise<APIGatewayProxyResult> => {
   try {
     const userService = new UserService();
-    const { pathParameters } = event;
-    const { userId } = pathParameters;
+    const { body: rawBody } = event;
+    const body = JSON.parse(rawBody);
+    const user: User = new User({
+      isAdmin: false,
+      isOnboarded: false,
+      ...body
+    });
 
-    const result: User = await userService.get(userId);
+    await userService.create(user);
 
-    const response: HandlerResponse = responseBodyBuilder(200, result);
+    const response: HandlerResponse = responseBodyBuilder(201, "Success");
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/User:Get", error);
+    errorLogger("Handler/User:Post", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);
@@ -37,4 +42,4 @@ const userGet: APIGatewayProxyHandler = async (
   }
 };
 
-export { userGet };
+export { usersPost };

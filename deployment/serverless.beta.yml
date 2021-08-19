@@ -38,12 +38,12 @@ functions:
           path: /health
           method: GET
 
-  user-get:
-    handler: dist/handlers/user-get-handler/index.handler
+  users-get-one:
+    handler: dist/handlers/users-get-one-handler/index.handler
     description: Get a user
     events:
       - http:
-          path: /user/{userId}
+          path: /users/{userId}
           method: GET
           request:
             parameters:
@@ -52,12 +52,12 @@ functions:
           cors:
             headers: ${file(./deployment/cors.json):headers}
 
-  user-post:
-    handler: dist/handlers/user-post-handler/index.handler
+  users-post:
+    handler: dist/handlers/users-post-handler/index.handler
     description: Create user
     events:
       - http:
-          path: /user
+          path: /users
           method: POST
           cors:
             headers: ${file(./deployment/cors.json):headers}

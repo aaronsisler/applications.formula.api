@@ -17,7 +17,7 @@ jest.mock("../../utils/response-body-builder", () => ({
 
 jest.mock("../../utils/error-logger");
 
-describe("Handlers/User:Get", () => {
+describe("Handlers/User:Get:userId", () => {
   let callback: Callback<APIGatewayProxyResult>;
   let event: any;
 
@@ -60,7 +60,7 @@ describe("Handlers/User:Get", () => {
 
     it("should log error messages correctly", () => {
       expect(errorLogger).toHaveBeenCalledWith(
-        "Handler/User:Get",
+        "Handler/User:Get:userId",
         "mock-error"
       );
     });
