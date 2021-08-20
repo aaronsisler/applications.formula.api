@@ -8,6 +8,7 @@ import {
 
 import { HandlerResponse } from "../../models/handler-response";
 import { User } from "../../models/user";
+import { UserType } from "../../models/user-type";
 import { UserService } from "../../services/user-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
@@ -22,8 +23,7 @@ export const usersPost: APIGatewayProxyHandler = async (
     const { body: rawBody } = event;
     const body = JSON.parse(rawBody);
     const user: User = new User({
-      isAdmin: false,
-      isOnboarded: false,
+      userType: UserType.VISITOR,
       ...body
     });
 

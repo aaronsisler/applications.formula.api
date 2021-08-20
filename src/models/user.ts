@@ -1,24 +1,23 @@
+import { UserType } from "./user-type";
+
 export class User {
   userId: string;
   firstName: string;
   lastName: string;
   email: string;
-  isOnboarded: boolean = false;
-  isAdmin: boolean = false;
+  userType: UserType;
 
   constructor(options: {
     userId?: string;
     firstName?: string;
     lastName?: string;
     email?: string;
-    isOnboarded?: boolean;
-    isAdmin?: boolean;
+    userType?: UserType;
   }) {
     this.userId = options.userId;
     this.firstName = options.firstName;
     this.lastName = options.lastName;
     this.email = options.email;
-    this.isOnboarded = options.isOnboarded;
-    this.isAdmin = options.isAdmin;
+    this.userType = options.userType;
   }
 }
