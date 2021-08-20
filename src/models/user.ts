@@ -5,7 +5,7 @@ export class User {
   firstName: string;
   lastName: string;
   email: string;
-  userType: UserType;
+  userType: UserType = UserType.VISITOR;
 
   constructor(options: {
     userId?: string;
