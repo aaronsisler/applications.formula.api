@@ -6,32 +6,30 @@ import {
   Context
 } from "aws-lambda";
 
-import { ApplicationField } from "../../models/application-field";
+import { ApplicationFormGroup } from "../../models/application-form-group";
 import { HandlerResponse } from "../../models/handler-response";
 import { ApplicationService } from "../../services/application-service";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-const applicationFieldsPost: APIGatewayProxyHandler = async (
+export const applicationFormGroupsGet: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
   _context: Context,
   callback: Callback<APIGatewayProxyResult>
 ): Promise<APIGatewayProxyResult> => {
   try {
     const applicationService = new ApplicationService();
-    const { body: rawBody } = event;
-    const body = JSON.parse(rawBody);
-    const parsedApplicationFields: ApplicationField[] = body.map(
-      (applicationField: any) => new ApplicationField({ ...applicationField })
-    );
+    const { pathParameters } = event;
+    const { applicationId } = pathParameters;
 
-    await applicationService.addApplicationFields(parsedApplicationFields);
+    const result: ApplicationFormGroup[] =
+      await applicationService.getApplicationFormGroups(applicationId);
 
-    const response: HandlerResponse = responseBodyBuilder(201, "Success");
+    const response: HandlerResponse = responseBodyBuilder(200, result);
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/ApplicationFields:Post", error);
+    errorLogger("Handler/ApplicationFormGroups:Get", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);
@@ -39,5 +37,3 @@ const applicationFieldsPost: APIGatewayProxyHandler = async (
     return;
   }
 };
-
-export { applicationFieldsPost };

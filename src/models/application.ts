@@ -1,24 +1,24 @@
 import { ApplicationApplicant } from "./application-applicant";
-import { ApplicationField } from "./application-field";
+import { ApplicationFormGroup } from "./application-form-group";
 
 export class Application {
   applicationId: string;
   tenantId: string;
   applicationName: string;
-  applicationFields: ApplicationField[];
+  applicationFormGroups: ApplicationFormGroup[];
   applicants: ApplicationApplicant[];
 
   constructor(options: {
     applicationId?: string;
     tenantId?: string;
     applicationName?: string;
-    applicationFields?: ApplicationField[];
+    applicationFormGroups?: ApplicationFormGroup[];
     applicants?: ApplicationApplicant[];
   }) {
     this.applicationId = options.applicationId;
     this.tenantId = options.tenantId;
     this.applicationName = options.applicationName;
-    this.applicationFields = options.applicationFields;
+    this.applicationFormGroups = options.applicationFormGroups;
     this.applicants = options.applicants;
   }
 }

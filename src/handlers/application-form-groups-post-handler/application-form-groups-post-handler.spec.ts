@@ -3,11 +3,11 @@ import { handler } from "./index";
 import { errorLogger } from "../../utils/error-logger";
 import { responseBodyBuilder } from "../../utils/response-body-builder";
 
-let mockGetApplicationFields: jest.Mock;
+let mockAddApplicationFormGroups: jest.Mock;
 
 jest.mock("../../services/application-service", () => ({
   ApplicationService: jest.fn(() => ({
-    getApplicationFields: mockGetApplicationFields
+    addApplicationFormGroups: mockAddApplicationFormGroups
   }))
 }));
 
@@ -17,32 +17,41 @@ jest.mock("../../utils/response-body-builder", () => ({
 
 jest.mock("../../utils/error-logger");
 
-describe("Handlers/ApplicationFields:Post", () => {
+describe("Handlers/ApplicationFormGroups:Post", () => {
   let callback: Callback<APIGatewayProxyResult>;
   let event: any;
 
   beforeEach(async () => {
     callback = jest.fn();
-    mockGetApplicationFields = jest.fn().mockResolvedValue(undefined);
+    mockAddApplicationFormGroups = jest.fn().mockResolvedValue(undefined);
+    event = {
+      body: `[
+          {
+            "applicationId":"mock-application-id",
+            "applicationFormGroupId":"mock-application-form-group-id",
+            "applicationFormGroupSequence": 1,
+            "formGroupType": "NAME"
+          },
+          {
+            "applicationId":"mock-application-id",
+            "applicationFormGroupId":"mock-application-form-group-id",
+            "applicationFormGroupSequence": 2,
+            "formGroupType": "NAME"
+          }
+        ]`
+    };
   });
 
-  describe("when application fields are retrieved for an application", () => {
-    beforeEach(() => {
-      event = { pathParameters: { applicationId: "mock-application-id" } };
-    });
-
+  describe("and when a list of application form groups are created", () => {
     beforeEach(async () => {
-      mockGetApplicationFields = jest.fn().mockResolvedValue(undefined);
       await handler(event, undefined, callback);
     });
 
-    it("should attempt to get application's application fields correctly", async () => {
-      expect(mockGetApplicationFields).toHaveBeenCalledWith(
-        "mock-application-id"
-      );
+    it("should attempt to create application form groups correctly", async () => {
+      expect(mockAddApplicationFormGroups).toHaveBeenCalled();
     });
 
-    xit("should return the correct response", () => {
+    it("should return the correct response", () => {
       expect(responseBodyBuilder).toHaveBeenCalledWith(201, "Success");
     });
 
@@ -51,21 +60,19 @@ describe("Handlers/ApplicationFields:Post", () => {
     });
   });
 
-  describe("and when applications are NOT retrieved for a tenant", () => {
+  describe("and when a list of application form groups are NOT created", () => {
     beforeEach(async () => {
-      mockGetApplicationFields = jest.fn().mockRejectedValue("mock-error");
+      mockAddApplicationFormGroups = jest.fn().mockRejectedValue("mock-error");
       await handler(event, undefined, callback);
     });
 
-    it("should attempt to get application's application fields correctly", async () => {
-      expect(mockGetApplicationFields).toHaveBeenCalledWith(
-        "mock-application-id"
-      );
+    it("should attempt to create a list of application form groups correctly", async () => {
+      expect(mockAddApplicationFormGroups).toHaveBeenCalled();
     });
 
     it("should log error messages correctly", () => {
       expect(errorLogger).toHaveBeenCalledWith(
-        "Handler/ApplicationFields:Get",
+        "Handler/ApplicationFormGroups:Post",
         "mock-error"
       );
     });

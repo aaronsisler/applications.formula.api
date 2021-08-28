@@ -21,11 +21,11 @@ export const applicationsGetOne: APIGatewayProxyHandler = async (
     const applicationService = new ApplicationService();
     const { pathParameters, queryStringParameters = {} } = event;
     const { applicationId } = pathParameters;
-    const { withApplicants, withFields } = queryStringParameters;
+    const { withApplicants, withFormGroups } = queryStringParameters;
 
     let result: Application;
 
-    if (!!withApplicants && !!withFields) {
+    if (!!withApplicants && !!withFormGroups) {
       result = await applicationService.get(applicationId);
     }
 
@@ -35,8 +35,10 @@ export const applicationsGetOne: APIGatewayProxyHandler = async (
       );
     }
 
-    if (withFields) {
-      result = await applicationService.getApplicationWithFields(applicationId);
+    if (withFormGroups) {
+      result = await applicationService.getApplicationWithFormGroups(
+        applicationId
+      );
     }
 
     const response: HandlerResponse = responseBodyBuilder(200, result);

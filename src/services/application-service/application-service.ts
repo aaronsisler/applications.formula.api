@@ -4,7 +4,7 @@ import { DatabaseService } from "../database-service";
 import { QueueService } from "../queue-service";
 import { Application } from "../../models/application";
 import { ApplicationApplicant } from "../../models/application-applicant";
-import { ApplicationField } from "../../models/application-field";
+import { ApplicationFormGroup } from "../../models/application-form-group";
 import { ApplicationSubmission } from "../../models/application-submission";
 import { databaseKeyParser } from "../../utils/database-key-parser";
 import { errorLogger } from "../../utils/error-logger";
@@ -77,37 +77,41 @@ export class ApplicationService {
     }
   }
 
-  async getApplicationWithFields(applicationId: string): Promise<Application> {
+  async getApplicationWithFormGroups(
+    applicationId: string
+  ): Promise<Application> {
     try {
       const rawApplication = await this.databaseService.getItem(
         "Application",
         `Application#${applicationId}`
       );
 
-      const applicationFields: ApplicationField[] =
-        await this.getApplicationFields(applicationId);
+      const applicationFormGroups: ApplicationFormGroup[] =
+        await this.getApplicationFormGroups(applicationId);
 
       const application = new Application({
         ...rawApplication,
-        applicationFields: applicationFields
+        applicationFormGroups: applicationFormGroups
       });
 
       return Promise.resolve(application);
     } catch (error) {
-      errorLogger("Service:Application::getApplicationWithFields", error);
+      errorLogger("Service:Application::getApplicationWithFormGroups", error);
       throw new Error("Records not retrieved");
     }
   }
 
-  async addApplicationFields(
-    applicationFields: ApplicationField[]
+  async addApplicationFormGroups(
+    applicationFormGroups: ApplicationFormGroup[]
   ): Promise<void> {
     try {
-      const items: object[] = this.mapApplicationFields(applicationFields);
+      const items: object[] = this.mapApplicationFormGroups(
+        applicationFormGroups
+      );
 
       return await this.databaseService.batchCreate(items);
     } catch (error) {
-      errorLogger("Service:Application::addApplicationFields", error);
+      errorLogger("Service:Application::addApplicationFormGroups", error);
       throw new Error("Record not created");
     }
   }
@@ -123,27 +127,28 @@ export class ApplicationService {
     }
   }
 
-  async getApplicationFields(
+  async getApplicationFormGroups(
     applicationId: string
-  ): Promise<ApplicationField[]> {
+  ): Promise<ApplicationFormGroup[]> {
     try {
-      const rawApplicationFields = await this.databaseService.getItems(
+      const rawApplicationFormGroups = await this.databaseService.getItems(
         `Application#${applicationId}`,
-        "ApplicationField"
+        "ApplicationFormGroup"
       );
 
-      const applicationFields: ApplicationField[] = rawApplicationFields.map(
-        (item: DocumentClient.AttributeMap) =>
-          new ApplicationField({
-            applicationId: databaseKeyParser(item.PartitionKey),
-            applicationFieldId: databaseKeyParser(item.SortKey),
-            ...item
-          })
-      );
+      const applicationFormGroup: ApplicationFormGroup[] =
+        rawApplicationFormGroups.map(
+          (item: DocumentClient.AttributeMap) =>
+            new ApplicationFormGroup({
+              applicationId: databaseKeyParser(item.PartitionKey),
+              applicationFormGroupId: databaseKeyParser(item.SortKey),
+              ...item
+            })
+        );
 
-      return Promise.resolve(applicationFields);
+      return Promise.resolve(applicationFormGroup);
     } catch (error) {
-      errorLogger("Service:Application::getApplicationFields", error);
+      errorLogger("Service:Application::getApplicationFormGroups", error);
       throw new Error("Records not retrieved");
     }
   }
@@ -172,18 +177,18 @@ export class ApplicationService {
     }
   }
 
-  private mapApplicationFields(
-    applicationFields: ApplicationField[]
+  private mapApplicationFormGroups(
+    applicationFormGroups: ApplicationFormGroup[]
   ): object[] {
-    const mappedApplicationFields: object[] = applicationFields.map(
-      (applicationField) => ({
-        PartitionKey: `Application#${applicationField.applicationId}`,
-        SortKey: `ApplicationField#${applicationField.applicationFieldId}`,
-        ...applicationField,
+    const mappedApplicationFormGroups: object[] = applicationFormGroups.map(
+      (applicationFormGroup) => ({
+        PartitionKey: `Application#${applicationFormGroup.applicationId}`,
+        SortKey: `ApplicationFormGroup#${applicationFormGroup.applicationFormGroupId}`,
+        ...applicationFormGroup,
         applicationId: undefined,
-        applicationFieldId: undefined
+        applicationFormGroupId: undefined
       })
     );
-    return mappedApplicationFields;
+    return mappedApplicationFormGroups;
   }
 }
