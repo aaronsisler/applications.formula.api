@@ -4,6 +4,7 @@ import { DatabaseService } from "../database-service";
 import { QueueService } from "../queue-service";
 import { Application } from "../../models/application";
 import { ApplicationApplicant } from "../../models/application-applicant";
+import { ApplicationField } from "../../models/application-field";
 import { ApplicationFormGroup } from "../../models/application-form-group";
 import { ApplicationSubmission } from "../../models/application-submission";
 import { databaseKeyParser } from "../../utils/database-key-parser";
@@ -18,7 +19,7 @@ export class ApplicationService {
     this.queueService = new QueueService();
   }
 
-  async create(application: Application): Promise<void> {
+  public async create(application: Application): Promise<void> {
     try {
       const applicationFields: any = undefined;
       const item = {
@@ -35,7 +36,7 @@ export class ApplicationService {
     }
   }
 
-  async get(applicationId: string): Promise<Application> {
+  public async get(applicationId: string): Promise<Application> {
     try {
       const rawApplication = await this.databaseService.getItem(
         "Application",
@@ -53,7 +54,7 @@ export class ApplicationService {
     }
   }
 
-  async getApplicationWithApplicants(
+  public async getApplicationWithApplicants(
     applicationId: string
   ): Promise<Application> {
     try {
@@ -77,7 +78,7 @@ export class ApplicationService {
     }
   }
 
-  async getApplicationWithFormGroups(
+  public async getApplicationWithFormDetails(
     applicationId: string
   ): Promise<Application> {
     try {
@@ -89,19 +90,23 @@ export class ApplicationService {
       const applicationFormGroups: ApplicationFormGroup[] =
         await this.getApplicationFormGroups(applicationId);
 
+      const applicationFields: ApplicationField[] =
+        await this.getApplicationFields(applicationId);
+
       const application = new Application({
         ...rawApplication,
-        applicationFormGroups: applicationFormGroups
+        applicationFormGroups,
+        applicationFields
       });
 
       return Promise.resolve(application);
     } catch (error) {
-      errorLogger("Service:Application::getApplicationWithFormGroups", error);
+      errorLogger("Service:Application::getApplicationWithFormDetails", error);
       throw new Error("Records not retrieved");
     }
   }
 
-  async addApplicationFormGroups(
+  public async addApplicationFormGroups(
     applicationFormGroups: ApplicationFormGroup[]
   ): Promise<void> {
     try {
@@ -112,11 +117,24 @@ export class ApplicationService {
       return await this.databaseService.batchCreate(items);
     } catch (error) {
       errorLogger("Service:Application::addApplicationFormGroups", error);
-      throw new Error("Record not created");
+      throw new Error("Records not created");
     }
   }
 
-  async submitApplication(
+  public async addApplicationFields(
+    applicationFields: ApplicationField[]
+  ): Promise<void> {
+    try {
+      const items: object[] = this.mapApplicationFields(applicationFields);
+
+      return await this.databaseService.batchCreate(items);
+    } catch (error) {
+      errorLogger("Service:Application::addApplicationFields", error);
+      throw new Error("Records not created");
+    }
+  }
+
+  public async submitApplication(
     applicationSubmission: ApplicationSubmission
   ): Promise<void> {
     try {
@@ -127,7 +145,7 @@ export class ApplicationService {
     }
   }
 
-  async getApplicationFormGroups(
+  public async getApplicationFormGroups(
     applicationId: string
   ): Promise<ApplicationFormGroup[]> {
     try {
@@ -153,7 +171,34 @@ export class ApplicationService {
     }
   }
 
-  async getApplicants(applicationId: string): Promise<ApplicationApplicant[]> {
+  public async getApplicationFields(
+    applicationId: string
+  ): Promise<ApplicationField[]> {
+    try {
+      const rawApplicationFields = await this.databaseService.getItems(
+        `Application#${applicationId}`,
+        "ApplicationField"
+      );
+
+      const applicationFields: ApplicationField[] = rawApplicationFields.map(
+        (item: DocumentClient.AttributeMap) =>
+          new ApplicationField({
+            applicationId: databaseKeyParser(item.PartitionKey),
+            applicationFieldId: databaseKeyParser(item.SortKey),
+            ...item
+          })
+      );
+
+      return Promise.resolve(applicationFields);
+    } catch (error) {
+      errorLogger("Service:Application::getApplicationFields", error);
+      throw new Error("Records not retrieved");
+    }
+  }
+
+  public async getApplicants(
+    applicationId: string
+  ): Promise<ApplicationApplicant[]> {
     try {
       const rawApplicationFields = await this.databaseService.getItems(
         `Application#${applicationId}`,
@@ -187,6 +232,21 @@ export class ApplicationService {
         ...applicationFormGroup,
         applicationId: undefined,
         applicationFormGroupId: undefined
+      })
+    );
+    return mappedApplicationFormGroups;
+  }
+
+  private mapApplicationFields(
+    applicationFields: ApplicationField[]
+  ): object[] {
+    const mappedApplicationFormGroups: object[] = applicationFields.map(
+      (applicationField) => ({
+        PartitionKey: `Application#${applicationField.applicationId}`,
+        SortKey: `ApplicationField#${applicationField.applicationFieldId}`,
+        ...applicationField,
+        applicationId: undefined,
+        applicationFieldId: undefined
       })
     );
     return mappedApplicationFormGroups;

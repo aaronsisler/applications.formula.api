@@ -212,7 +212,7 @@ functions:
 
   application-form-groups-get:
     handler: dist/handlers/application-form-groups-get-handler/index.handler
-    description: Get application form-groups for an application
+    description: Get application form groups for an application
     events:
       - http:
           path: /applications/{applicationId}/application-form-groups
@@ -226,10 +226,38 @@ functions:
 
   application-form-groups-post:
     handler: dist/handlers/application-form-groups-post-handler/index.handler
-    description: Create application form-groups for a given application
+    description: Create application form groups for a given application
     events:
       - http:
           path: /applications/{applicationId}/application-form-groups
+          method: POST
+          request:
+            parameters:
+              paths:
+                applicationId: true
+          cors:
+            headers: ${file(./deployment/cors.json):headers}
+
+  application-fields-get:
+    handler: dist/handlers/application-fields-get-handler/index.handler
+    description: Get application fields for an application
+    events:
+      - http:
+          path: /applications/{applicationId}/application-fields
+          method: GET
+          request:
+            parameters:
+              paths:
+                applicationId: true
+          cors:
+            headers: ${file(./deployment/cors.json):headers}
+
+  application-fields-post:
+    handler: dist/handlers/application-fields-post-handler/index.handler
+    description: Create application fields for a given application
+    events:
+      - http:
+          path: /applications/{applicationId}/application-fields
           method: POST
           request:
             parameters:
