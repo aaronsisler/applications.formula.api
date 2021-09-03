@@ -29,7 +29,7 @@ export const applicationFieldsGet: APIGatewayProxyHandler = async (
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/applicationFieldsGet:Get", error);
+    errorLogger("Handler/ApplicationFields:Get", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);

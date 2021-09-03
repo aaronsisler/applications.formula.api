@@ -31,7 +31,7 @@ export const applicationFieldsPost: APIGatewayProxyHandler = async (
 
     callback(null, response);
   } catch (error) {
-    errorLogger("Handler/ApplicationFormGroups:Post", error);
+    errorLogger("Handler/ApplicationFields:Post", error);
     const response: HandlerResponse = responseBodyBuilder(500, "Failure");
 
     callback(null, response);
