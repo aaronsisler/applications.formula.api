@@ -181,12 +181,20 @@ export class ApplicationService {
       );
 
       const applicationFields: ApplicationField[] = rawApplicationFields.map(
-        (item: DocumentClient.AttributeMap) =>
-          new ApplicationField({
+        (item: DocumentClient.AttributeMap) => {
+          const [applicationFieldId, applicationFieldSequence] =
+            databaseKeyParser(item.SortKey).split("#");
+
+          return new ApplicationField({
             applicationId: databaseKeyParser(item.PartitionKey),
-            applicationFieldId: databaseKeyParser(item.SortKey),
+            applicationFieldId,
+            applicationFieldSequence:
+              applicationFieldSequence == undefined
+                ? undefined
+                : Number.parseInt(applicationFieldSequence),
             ...item
-          })
+          });
+        }
       );
 
       return Promise.resolve(applicationFields);
@@ -241,13 +249,19 @@ export class ApplicationService {
     applicationFields: ApplicationField[]
   ): object[] {
     const mappedApplicationFormGroups: object[] = applicationFields.map(
-      (applicationField) => ({
-        PartitionKey: `Application#${applicationField.applicationId}`,
-        SortKey: `ApplicationField#${applicationField.applicationFieldId}`,
-        ...applicationField,
-        applicationId: undefined,
-        applicationFieldId: undefined
-      })
+      (applicationField) => {
+        const sortKey = applicationField.applicationFieldSequence
+          ? `ApplicationField#${applicationField.applicationFieldId}#${applicationField.applicationFieldSequence}`
+          : `ApplicationField#${applicationField.applicationFieldId}`;
+
+        return {
+          PartitionKey: `Application#${applicationField.applicationId}`,
+          SortKey: sortKey,
+          ...applicationField,
+          applicationId: undefined,
+          applicationFieldId: undefined
+        };
+      }
     );
     return mappedApplicationFormGroups;
   }
